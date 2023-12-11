@@ -1,6 +1,7 @@
 #include "algorithms/md/hymd/lattice_traverser.h"
 
 #include <boost/asio.hpp>
+#include <easylogging++.h>
 
 #include "algorithms/md/hymd/invalidated_rhs.h"
 #include "algorithms/md/hymd/lowest_bound.h"
@@ -33,6 +34,7 @@ void LatticeTraverser::LowerAndSpecialize(Validator::Result& validation_result,
 }
 
 bool LatticeTraverser::TraverseLattice(bool const traverse_all) {
+    LOG(DEBUG) << "Traversing lattice";
     while (level_getter_->AreLevelsLeft()) {
         std::vector<lattice::ValidationInfo> mds = level_getter_->GetCurrentMds();
         if (mds.empty()) {
