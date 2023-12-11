@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+#include <easylogging++.h>
+
 #include "algorithms/md/hymd/lattice/md_lattice_node_info.h"
 #include "algorithms/md/hymd/lowest_bound.h"
 #include "algorithms/md/hymd/utility/set_for_scope.h"
@@ -48,6 +50,7 @@ void RecordPairInferrer::ProcessSimVec(SimilarityVector const& sim) {
 }
 
 bool RecordPairInferrer::InferFromRecordPairs(Recommendations recommendations) {
+    LOG(DEBUG) << "Inferring from pairs";
     Statistics statistics;
 
     auto process_collection = [&](auto& collection, auto get_sim_vec) {

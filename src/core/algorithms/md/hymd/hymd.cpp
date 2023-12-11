@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstddef>
 
+#include <easylogging++.h>
+
 #include "algorithms/md/hymd/lattice/cardinality/min_picking_level_getter.h"
 #include "algorithms/md/hymd/lattice_traverser.h"
 #include "algorithms/md/hymd/lowest_bound.h"
@@ -102,6 +104,7 @@ void HyMD::RegisterOptions() {
 void HyMD::ResetStateMd() {}
 
 void HyMD::LoadDataInternal() {
+    LOG(DEBUG) << "Started loading";
     left_schema_ = std::make_shared<RelationalSchema>(left_table_->GetRelationName());
     std::size_t const left_table_cols = left_table_->GetNumberOfColumns();
     for (model::Index i = 0; i < left_table_cols; ++i) {
@@ -122,10 +125,12 @@ void HyMD::LoadDataInternal() {
         records_info_->GetRightCompressor().GetNumberOfRecords() == 0) {
         throw config::ConfigurationError("MD mining with either table empty is meaningless!");
     }
+    LOG(DEBUG) << "Finished loading";
 }
 
 unsigned long long HyMD::ExecuteInternal() {
     auto const start_time = std::chrono::system_clock::now();
+    LOG(DEBUG) << "Started execution";
     std::vector<std::tuple<std::unique_ptr<preprocessing::similarity_measure::SimilarityMeasure>,
                            model::Index, model::Index>>
             column_matches_info;
@@ -139,6 +144,7 @@ unsigned long long HyMD::ExecuteInternal() {
     // TODO: make infrastructure for depth level
     SimilarityData similarity_data =
             SimilarityData::CreateFrom(records_info_.get(), std::move(column_matches_info));
+    LOG(DEBUG) << "Finished similarity calculation";
     lattice::FullLattice lattice{column_match_number, [](...) { return 1; }};
     Specializer specializer{similarity_data.GetColumnMatchesInfo(), &lattice, prune_nondisjoint_};
     LatticeTraverser lattice_traverser{
@@ -153,8 +159,10 @@ unsigned long long HyMD::ExecuteInternal() {
         done = record_pair_inferrer.InferFromRecordPairs(lattice_traverser.TakeRecommendations());
         done = lattice_traverser.TraverseLattice(done);
     } while (!done);
+    LOG(DEBUG) << "Done!";
 
     RegisterResults(similarity_data, lattice.GetAll());
+    LOG(DEBUG) << "Registered MDs.";
 
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() -
                                                                  start_time)

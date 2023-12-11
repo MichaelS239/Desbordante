@@ -19,6 +19,8 @@ Possible options:
 EOF
 }
 
+GDB_DEBUG=true
+
 for i in "$@"
     do
     case $i in
