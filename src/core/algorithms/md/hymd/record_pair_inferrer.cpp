@@ -496,6 +496,7 @@ PairComparisonResult RecordPairInferrer::CompareRecords(
 }
 
 bool RecordPairInferrer::InferFromRecordPairs(Recommendations const& recommendations) {
+    LOG(DEBUG) << "Inferring from pairs";
     (this->*recom_process_method_)(recommendations);
 
     constexpr double kTopThresholdDecrease = 0.9;
