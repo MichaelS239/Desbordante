@@ -51,6 +51,7 @@ std::vector<ValidationInfo> MinPickingLevelGetter::GetCurrentMdsInternal(
         previously_picked_rhs |= new_rhs_indices;
     }
     if (collected.empty()) {
+        //lattice_->PrintStats();
         picked_.clear();
         ++cur_level_;
     }
