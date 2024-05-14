@@ -5,6 +5,7 @@
 
 #include "algorithms/md/hymd/hymd.h"
 #include "algorithms/md/hymd/preprocessing/similarity_measure/levenshtein_similarity_measure.h"
+#include "algorithms/md/hymd/validator.h"
 #include "parser/csv_parser/csv_parser.h"
 
 INITIALIZE_EASYLOGGINGPP
@@ -53,6 +54,7 @@ int main(int argc, char** argv) {
     hymd.SetOption("column_matches");
     hymd.Execute();
     auto const& md_list = hymd.MdList();
+    std::cout << "Validations: " << algos::hymd::validations << std::endl;
     std::cout << "Found " << md_list.size() << " MDs" << std::endl;
     if (verbose) {
         for (auto const& md : md_list) {

@@ -1,5 +1,6 @@
 #include "algorithms/md/hymd/validator.h"
 
+#include <atomic>
 #include <cassert>
 #include <functional>
 #include <vector>
@@ -63,6 +64,8 @@ struct hash<vector<ValueIdentifier>> {
 }  // namespace std
 
 namespace algos::hymd {
+
+std::atomic<std::size_t> validations = 0;
 
 struct WorkingInfo {
     RecommendationVector& recommendations;
@@ -285,8 +288,8 @@ auto Validator::SetPairProcessor<PairProvider>::LowerForColumnMatch(
 
 template <typename PairProvider>
 auto Validator::SetPairProcessor<PairProvider>::LowerForColumnMatch(
-        WorkingInfo& working_info, PliCluster const& cluster, RecSet const& similar_records) const
-        -> Status {
+        WorkingInfo& working_info, PliCluster const& cluster,
+        RecSet const& similar_records) const -> Status {
     if (working_info.ShouldStop()) return Status::kInvalidated;
 
     assert(!similar_records.empty());
@@ -482,6 +485,7 @@ public:
 };
 
 Validator::Result Validator::Validate(lattice::ValidationInfo& info) const {
+    ++validations;
     DecisionBoundaryVector const& lhs_bounds = info.node_info->lhs_bounds;
     DecisionBoundaryVector& rhs_bounds = *info.node_info->rhs_bounds;
     // After a call to this method, info.rhs_indices must not be used
@@ -516,5 +520,4 @@ Validator::Result Validator::Validate(lattice::ValidationInfo& info) const {
                                                       non_zero_indices);
     return processor.ProcessPairs(indices_bitset);
 }
-
 }  // namespace algos::hymd
