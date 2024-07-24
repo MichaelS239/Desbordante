@@ -16,7 +16,9 @@
 #include "model/index.h"
 
 namespace algos::hymd {
-extern std::atomic<std::size_t> validations;
+extern std::atomic<std::size_t> validations; // minimize this
+extern std::atomic<std::size_t> confirmed; // awesome
+extern std::atomic<std::size_t> unsupported; // minimize this (low priority)
 class Validator {
 public:
     struct Result {

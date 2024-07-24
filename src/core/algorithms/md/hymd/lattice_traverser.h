@@ -10,6 +10,9 @@
 
 namespace algos::hymd {
 
+extern std::size_t traversal_lowered_to_zero;
+extern std::size_t traversal_lowered_to_non_zero;
+
 class LatticeTraverser {
 private:
     lattice::FullLattice* const lattice_;

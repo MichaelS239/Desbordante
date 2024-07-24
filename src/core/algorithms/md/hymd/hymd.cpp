@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 
+#define ELPP_STL_LOGGING
 #include <easylogging++.h>
 
 #include "algorithms/md/hymd/lattice/cardinality/min_picking_level_getter.h"

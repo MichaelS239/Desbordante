@@ -4,7 +4,9 @@
 #include <easylogging++.h>
 
 #include "algorithms/md/hymd/hymd.h"
+#include "algorithms/md/hymd/lattice_traverser.h"
 #include "algorithms/md/hymd/preprocessing/similarity_measure/levenshtein_similarity_measure.h"
+#include "algorithms/md/hymd/record_pair_inferrer.h"
 #include "algorithms/md/hymd/validator.h"
 #include "parser/csv_parser/csv_parser.h"
 
@@ -54,7 +56,25 @@ int main(int argc, char** argv) {
     hymd.SetOption("column_matches");
     hymd.Execute();
     auto const& md_list = hymd.MdList();
+    std::cout << "Pair inference found not minimal: " << algos::hymd::pair_inference_not_minimal
+              << std::endl;
+    std::cout << "Pair inference found trivial: " << algos::hymd::pair_inference_trivial
+              << std::endl;
+    std::cout << "Pair inference lowered to 0: " << algos::hymd::pair_inference_lowered_to_zero
+              << std::endl;
+    std::cout << "Pair inference lowered to not 0: " << algos::hymd::pair_inference_lowered_non_zero
+              << std::endl;
+    std::cout << "Pair inference no violation discovered: " << algos::hymd::pair_inference_accepted
+              << std::endl;
+    std::cout << std::endl;
     std::cout << "Validations: " << algos::hymd::validations << std::endl;
+    std::cout << "Confirmed by validation: " << algos::hymd::confirmed << std::endl;
+    std::cout << "Lowered to not 0 during lattice traversal: "
+              << algos::hymd::traversal_lowered_to_non_zero << std::endl;
+    std::cout << "Lowered to 0 during lattice traversal: " << algos::hymd::traversal_lowered_to_zero
+              << std::endl;
+    std::cout << "Unsupported: " << algos::hymd::unsupported << std::endl;
+    std::cout << std::endl;
     std::cout << "Found " << md_list.size() << " MDs" << std::endl;
     if (verbose) {
         for (auto const& md : md_list) {

@@ -10,6 +10,9 @@
 
 namespace algos::hymd {
 
+std::size_t traversal_lowered_to_zero = 0;
+std::size_t traversal_lowered_to_non_zero = 0;
+
 void LatticeTraverser::LowerAndSpecialize(Validator::Result& validation_result,
                                           lattice::ValidationInfo& validation_info) {
     DecisionBoundaryVector& lhs_bounds = validation_info.node_info->lhs_bounds;
@@ -29,6 +32,10 @@ void LatticeTraverser::LowerAndSpecialize(Validator::Result& validation_result,
     InvalidatedRhss const& invalidated = validation_result.invalidated;
     for (auto const& [index, _, actual_bound] : invalidated) {
         rhs_bounds[index] = actual_bound;
+        if (actual_bound == kLowestBound)
+            ++traversal_lowered_to_zero;
+        else
+            ++traversal_lowered_to_non_zero;
     }
     specializer_->SpecializeInvalidated(lhs_bounds, invalidated);
 }

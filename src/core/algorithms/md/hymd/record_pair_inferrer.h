@@ -12,6 +12,12 @@
 
 namespace algos::hymd {
 
+extern std::size_t pair_inference_not_minimal;
+extern std::size_t pair_inference_trivial;
+extern std::size_t pair_inference_lowered_to_zero;
+extern std::size_t pair_inference_lowered_non_zero;
+extern std::size_t pair_inference_accepted;
+
 class RecordPairInferrer {
 private:
     struct Statistics;
