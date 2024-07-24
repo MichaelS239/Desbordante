@@ -113,6 +113,9 @@ RecSet const* Validator::GetSimilarRecords(ValueIdentifier value_id, DecisionBou
     return &it->second;
 }
 
+std::atomic<std::size_t> confirmed = 0;
+std::atomic<std::size_t> unsupported = 0;
+
 template <typename PairProvider>
 class Validator::SetPairProcessor {
     Validator const* const validator_;
@@ -163,8 +166,14 @@ class Validator::SetPairProcessor {
             Index const index = working_info.index;
             DecisionBoundary const old_bound = working_info.old_bound;
             DecisionBoundary const new_bound = working_info.current_bound;
-            if (new_bound == old_bound) continue;
+            if (new_bound == old_bound) {
+                ++confirmed;
+                continue;
+            }
             invalidated_.emplace_back(index, old_bound, new_bound);
+        }
+        if (!Supported(support)) {
+            ++unsupported;
         }
         return {std::move(recommendations), std::move(invalidated_), !Supported(support)};
     }
@@ -502,6 +511,7 @@ Validator::Result Validator::Validate(lattice::ValidationInfo& info) const {
                 return;
             invalidated.emplace_back(index, old_bound, new_bound);
         });
+        if (!Supported(GetTotalPairsNum())) ++unsupported;
         return {{}, std::move(invalidated), !Supported(GetTotalPairsNum())};
     }
 

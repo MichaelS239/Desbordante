@@ -11,6 +11,12 @@
 
 namespace algos::hymd {
 
+std::size_t pair_inference_not_minimal = 0;
+std::size_t pair_inference_accepted = 0;
+std::size_t pair_inference_trivial = 0;
+std::size_t pair_inference_lowered_to_zero = 0;
+std::size_t pair_inference_lowered_non_zero = 0;
+
 struct RecordPairInferrer::Statistics {
     std::size_t samplings_started = 0;
     std::size_t sim_vecs_processed = 0;
@@ -39,11 +45,22 @@ void RecordPairInferrer::ProcessSimVec(SimilarityVector const& sim) {
                 DecisionBoundary& md_rhs_bound_ref = rhs_bounds[rhs_index];
                 md_rhs_bound_ref = kLowestBound;
                 // trivial
-                if (pair_rhs_bound <= lhs_bounds[rhs_index]) break;
+                if (pair_rhs_bound <= lhs_bounds[rhs_index]) {
+                    ++pair_inference_trivial;
+                    break;
+                }
                 // not minimal
-                if (lattice_->HasGeneralization(lhs_bounds, pair_rhs_bound, rhs_index)) break;
+                if (lattice_->HasGeneralization(lhs_bounds, pair_rhs_bound, rhs_index)) {
+                    ++pair_inference_not_minimal;
+                    break;
+                }
+                if (pair_rhs_bound == kLowestBound)
+                    ++pair_inference_lowered_to_zero;
+                else
+                    ++pair_inference_lowered_non_zero;
                 md_rhs_bound_ref = pair_rhs_bound;
             } while (false);
+            ++pair_inference_accepted;
             specializer_->SpecializeFor(sim, lhs_bounds, rhs_index, old_md_rhs_bound);
         }
     }
