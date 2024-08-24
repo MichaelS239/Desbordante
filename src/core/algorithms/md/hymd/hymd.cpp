@@ -65,7 +65,7 @@ void HyMD::RegisterOptions() {
             for (Index i = 0; i != num_columns; ++i) {
                 column_matches_option.push_back(
                         std::make_shared<
-                                preprocessing::similarity_measure::MongeElkanSimilarityMeasure>(
+                                preprocessing::similarity_measure::LevenshteinSimilarityMeasure>(
                                 i, i, 0.7));
             }
         } else {
@@ -76,7 +76,7 @@ void HyMD::RegisterOptions() {
                 for (Index j = 0; j != num_columns_right; ++j) {
                     column_matches_option.push_back(
                             std::make_shared<
-                                    preprocessing::similarity_measure::MongeElkanSimilarityMeasure>(
+                                    preprocessing::similarity_measure::LevenshteinSimilarityMeasure>(
                                     i, j, 0.7));
                 }
             }
