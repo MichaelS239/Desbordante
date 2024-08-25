@@ -13,6 +13,9 @@ for i in "$@"
         num_threads=${i#-t}
         num_threads=${num_threads#--threads=}
         ;;
+    -p*|--path=*)
+        path=${i#-p}
+        path=${path#--path=}
     esac
 done
 
