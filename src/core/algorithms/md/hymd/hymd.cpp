@@ -75,9 +75,8 @@ void HyMD::RegisterOptions() {
             for (Index i = 0; i != num_columns_left; ++i) {
                 for (Index j = 0; j != num_columns_right; ++j) {
                     column_matches_option.push_back(
-                            std::make_shared<
-                                    preprocessing::similarity_measure::LevenshteinSimilarityMeasure>(
-                                    i, j, 0.7));
+                            std::make_shared<preprocessing::similarity_measure::
+                                                     LevenshteinSimilarityMeasure>(i, j, 0.7));
                 }
             }
         }
@@ -200,7 +199,9 @@ unsigned long long HyMD::ExecuteInternal() {
 
     RegisterResults(similarity_data, lattice.GetAll());
     LOG(DEBUG) << "Registered MDs.";
-
+    LOG(INFO) << std::chrono::duration_cast<std::chrono::milliseconds>(
+                         std::chrono::system_clock::now() - start_time)
+                         .count();
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() -
                                                                  start_time)
             .count();
