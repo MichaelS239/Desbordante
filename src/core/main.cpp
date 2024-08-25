@@ -25,10 +25,11 @@ std::string MaxHitToString(auto&& arr, std::size_t column_matches) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 4) std::terminate();
+    if (argc != 4 && argc != 5) std::terminate();
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
+    unsigned short num_threads = argc == 4 : 0 ? argv[4];
     LOG(DEBUG) << "!" << separator << "!";
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
@@ -39,7 +40,10 @@ int main(int argc, char** argv) {
     hymd.SetOption("min_support");
     hymd.SetOption("prune_nondisjoint");
     hymd.SetOption("max_cardinality");
-    hymd.SetOption("threads");
+    if (num_threads)
+        hymd.SetOption("threads", num_threads);
+    else
+        hymd.SetOption("threads");
 
     /*
     std::vector<std::tuple<std::string, std::string,
