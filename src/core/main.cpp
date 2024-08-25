@@ -1,5 +1,7 @@
+#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 #include <easylogging++.h>
 
@@ -29,8 +31,8 @@ int main(int argc, char** argv) {
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
-    unsigned short num_threads = argc == 4 : 0 ? argv[4];
-    LOG(DEBUG) << "!" << separator << "!";
+    unsigned short num_threads = argc == 4 ? 0 : (unsigned short)std::strtoul(argv[4], NULL, 10);
+
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
     config::InputTable t = std::make_shared<CSVParser>(path, separator, has_header);

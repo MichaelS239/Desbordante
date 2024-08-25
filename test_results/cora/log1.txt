@@ -1,31 +1,32 @@
-2024-08-25 17:20:25,739 DEBUG [default] [michael@unknown-host] [int main(int, char**)] [/home/michael/Documents/Desbordante/src/core/main.cpp:32] !	!
-2024-08-25 17:20:25,739 DEBUG [default] [michael@unknown-host] [int main(int, char**)] [/home/michael/Documents/Desbordante/src/core/main.cpp:33] Started
-2024-08-25 17:20:25,740 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:116] Started loading
-2024-08-25 17:20:25,750 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:137] Finished loading
-2024-08-25 17:20:25,750 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:142] Started execution
-2024-08-25 17:20:25,930 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:152] Finished similarity calculation
-2024-08-25 17:20:25,930 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:153] Original column matches: [13, 14, 4, 2, 8, 3, 5, 6, 15, 7, 11, 12, 10, 0, 1, 9]
-2024-08-25 17:20:26,186 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:26,361 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:172] Inferrer initialization finished
-2024-08-25 17:20:26,361 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:26,364 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:26,522 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:26,556 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:26,791 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:26,907 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:27,192 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:27,308 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:27,682 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:27,982 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
-2024-08-25 17:20:28,626 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
-2024-08-25 17:20:28,857 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:184] Done!
-2024-08-25 17:20:28,874 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:187] Registered MDs.
-2024-08-25 17:20:28,874 INFO [default] 3123
-Pair inference found not minimal: 3921
+2024-08-25 18:00:05,166 INFO [default] 1
+2024-08-25 18:00:05,166 DEBUG [default] [michael@unknown-host] [int main(int, char**)] [/home/michael/Documents/Desbordante/src/core/main.cpp:37] Started
+2024-08-25 18:00:05,166 INFO [default] 151
+2024-08-25 18:00:05,166 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:116] Started loading
+2024-08-25 18:00:05,176 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:137] Finished loading
+2024-08-25 18:00:05,176 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:142] Started execution
+2024-08-25 18:00:05,604 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:152] Finished similarity calculation
+2024-08-25 18:00:05,604 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:153] Original column matches: [13, 14, 4, 2, 8, 3, 5, 6, 15, 7, 11, 12, 10, 0, 1, 9]
+2024-08-25 18:00:05,851 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:06,017 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:172] Inferrer initialization finished
+2024-08-25 18:00:06,017 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:06,022 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:06,171 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:06,266 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:06,485 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:07,040 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:07,567 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:08,125 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:08,729 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:09,836 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-25 18:00:10,338 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-25 18:00:11,184 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:184] Done!
+2024-08-25 18:00:11,200 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:187] Registered MDs.
+2024-08-25 18:00:11,200 INFO [default] 6024
+Pair inference found not minimal: 3987
 Pair inference found trivial: 0
-Pair inference lowered to 0: 14863
-Pair inference lowered to not 0: 7849
-Pair inference no violation discovered: 3928
+Pair inference lowered to 0: 14773
+Pair inference lowered to not 0: 7985
+Pair inference no violation discovered: 3998
 
 Validations: 2205
 Confirmed by validation: 2151
