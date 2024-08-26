@@ -1,0 +1,38 @@
+2024-08-26 01:13:49,670 DEBUG [default] [michael@unknown-host] [int main(int, char**)] [/home/michael/Documents/Desbordante/src/core/main.cpp:36] Started
+2024-08-26 01:13:49,670 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:116] Started loading
+2024-08-26 01:13:49,794 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:137] Finished loading
+2024-08-26 01:13:49,794 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:142] Started execution
+2024-08-26 01:13:55,050 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:152] Finished similarity calculation
+2024-08-26 01:13:55,050 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:153] Original column matches: [0, 4, 6, 7, 8, 9, 12, 13, 14, 1, 5, 11, 10, 3, 2]
+2024-08-26 01:13:55,436 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-26 01:13:55,454 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:172] Inferrer initialization finished
+2024-08-26 01:13:55,455 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-26 01:13:57,015 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-26 01:13:57,034 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-26 01:13:57,528 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-26 01:13:57,567 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-26 01:13:57,720 DEBUG [default] [michael@unknown-host] [bool algos::hymd::RecordPairInferrer::InferFromRecordPairs(const Recommendations&)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/record_pair_inferrer.cpp:492] Inferring from pairs
+2024-08-26 01:13:57,802 DEBUG [default] [michael@unknown-host] [bool algos::hymd::LatticeTraverser::TraverseLattice(bool)] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/lattice_traverser.cpp:11] Traversing lattice
+2024-08-26 01:13:57,803 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:184] Done!
+2024-08-26 01:13:57,803 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:187] Registered MDs.
+2024-08-26 01:13:57,803 INFO [default] 8009
+Pair inference found not minimal: 0
+Pair inference found trivial: 0
+Pair inference lowered to 0: 3656
+Pair inference lowered to not 0: 0
+Pair inference no violation discovered: 0
+
+Validations: 199
+Confirmed by validation: 111
+Lowered to not 0 during lattice traversal: 0
+Lowered to 0 (deleted) during lattice traversal: 100
+Unsupported: 0
+
+Total interestingness CCV ID searches: 199
+Max CCV IDs detected for all column matches during raising: 0
+Started interestingness bound search with max bounds for all column matches: 174
+Interestingness CCV ID requested for every column match: 0 26 0 0 121 37 0 0 0 0 18 8 0 1 0 
+Max CCV ID hit for every column match: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+Started with max CCV ID for every column match: 0 26 0 0 121 37 0 0 0 0 0 0 0 0 0 
+
+Found 111 MDs

@@ -38,14 +38,14 @@ struct LevelStats {
     LevelStats(std::size_t col_matches) : child_thresholds(col_matches) {}
 };
 
-extern std::size_t pair_inference_not_minimal; // ok
-extern std::size_t pair_inference_trivial; // good
-extern std::size_t pair_inference_lowered_to_zero; // good
-extern std::size_t pair_inference_lowered_non_zero; // minimize this
-extern std::size_t pair_inference_accepted; // minimize this
+extern std::size_t pair_inference_not_minimal;       // ok
+extern std::size_t pair_inference_trivial;           // good
+extern std::size_t pair_inference_lowered_to_zero;   // good
+extern std::size_t pair_inference_lowered_non_zero;  // minimize this
+extern std::size_t pair_inference_accepted;          // minimize this
 
-extern std::size_t traversal_lowered; // minimize this (after the others)
-extern std::size_t traversal_deleted; // minimize this
+extern std::size_t traversal_lowered;  // minimize this (after the others)
+extern std::size_t traversal_deleted;  // minimize this
 
 extern std::unique_ptr<std::atomic<unsigned int>[]> interestingness_indices_requested;
 extern std::unique_ptr<std::atomic<unsigned int>[]> interestingness_indices_hit;

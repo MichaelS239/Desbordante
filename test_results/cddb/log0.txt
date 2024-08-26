@@ -1,0 +1,4 @@
+2024-08-26 01:14:14,419 DEBUG [default] [michael@unknown-host] [int main(int, char**)] [/home/michael/Documents/Desbordante/src/core/main.cpp:36] Started
+2024-08-26 01:14:14,419 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:116] Started loading
+2024-08-26 01:14:14,507 DEBUG [default] [michael@unknown-host] [virtual void algos::hymd::HyMD::LoadDataInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:137] Finished loading
+2024-08-26 01:14:14,507 DEBUG [default] [michael@unknown-host] [virtual long long unsigned int algos::hymd::HyMD::ExecuteInternal()] [/home/michael/Documents/Desbordante/src/core/algorithms/md/hymd/hymd.cpp:142] Started execution
