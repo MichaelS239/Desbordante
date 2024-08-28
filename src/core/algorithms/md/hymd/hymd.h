@@ -57,6 +57,7 @@ private:
 
 public:
     HyMD();
+    std::string GetStats(bool verbose = false) const;
 };
 
 }  // namespace algos::hymd

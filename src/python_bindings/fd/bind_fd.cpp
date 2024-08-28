@@ -59,7 +59,8 @@ void BindFd(py::module_& main_module) {
                           PFDTane>(fd_module, py::overload_cast<>(&FDAlgorithm::FdList, py::const_),
                                    "FdAlgorithm", "get_fds",
                                    {"HyFD", "Aid", "Depminer", "DFD", "FastFDs", "FDep", "FdMine",
-                                    "FUN", kPyroName, kTaneName, kPFDTaneName});
+                                    "FUN", kPyroName, kTaneName, kPFDTaneName})
+                    .first;
 
     auto define_submodule = [&fd_algos_module, &main_module](char const* name,
                                                              std::vector<char const*> algorithms) {
