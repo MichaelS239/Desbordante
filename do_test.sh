@@ -41,6 +41,10 @@ for i in "$@"
     esac
 done
 
+if [[ $mode == "python" ]]; then
+    cp do_test.py ./build/target/do_test.py
+fi
+
 options="$num_threads"
 
 if [[ $verbose == true ]]; then
@@ -51,7 +55,7 @@ if [[ $no_levels == true ]]; then
     options="$options -l"
 fi
 
-if [[ $delete_empty_nodes == false ]]; then
+if [[ $delete_empty_nodes == false ]] && [[ $mode != "python" ]]; then
     options="$options -n"
 fi
 
@@ -76,7 +80,11 @@ while read -r dataset_info; do
     for ((i=1;i<=run_number;i++)); do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
+        if [[ $mode != "python" ]]; then
+            /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
+        else
+            /usr/bin/time -v -o $path/$dataset/log$i.txt -a python3 ./build/target/do_test.py $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
+        fi
     done
 done < $dataset_path/datasets_info.txt
 #cpupower frequency-set -d 0.8GHz
