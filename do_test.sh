@@ -23,6 +23,12 @@ for i in "$@"
     esac
 done
 
+options="$num_threads"
+
+if [[ $verbose == true ]]; then
+    options="$options -v"
+fi
+
 #cpupower frequency-set -d 4.5GHz
 #cpupower frequency-set -u 4.5GHz
 for dataset in cora flights adult restaurants; do
@@ -31,7 +37,7 @@ for dataset in cora flights adult restaurants; do
     for i in {0..4}; do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 0 $num_threads $verbose> $path/$dataset/log$i.txt
+        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 0 $options> $path/$dataset/log$i.txt
     done
 done
 
@@ -41,7 +47,7 @@ done
 #    for i in {0..4}; do
 #        echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-#        ./build/target/Desbordante_run $dataset.csv ',' 1 $num_threads $verbose> $path/$dataset/log$i.txt
+#        ./build/target/Desbordante_run $dataset.csv ',' 1 $options > $path/$dataset/log$i.txt
 #    done
 #done
 
@@ -51,7 +57,7 @@ done
 #    for i in {0..4}; do
 #        echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-#        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 1 $num_threads $verbose> $path/$dataset/log$i.txt
+#        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 1 $options > $path/$dataset/log$i.txt
 #    done
 #done
 #cpupower frequency-set -d 0.8GHz
