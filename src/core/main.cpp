@@ -2,6 +2,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <sys/resource.h>
+#include <sys/time.h>
 
 #include <easylogging++.h>
 
@@ -79,6 +81,9 @@ int main(int argc, char** argv) {
     hymd.SetOption("column_matches");
     hymd.Execute();
     auto const& md_list = hymd.MdList();
+    struct rusage usage;
+    getrusage(RUSAGE_SELF, &usage);
+    std::cout << "Memory usage: " << usage.ru_maxrss << std::endl;
     std::cout << "Number of phase switches: " << algos::hymd::switch_num << std::endl;
     std::cout << std::endl;
     std::cout << "Pair inference found not minimal: "
@@ -128,6 +133,5 @@ int main(int argc, char** argv) {
             std::cout << md.ToStringShort() << std::endl;
         }
     }
-
     return 0;
 }
