@@ -16,6 +16,8 @@
 
 namespace algos::hymd {
 
+extern std::size_t switch_num;
+
 class HyMD final : public MdAlgorithm {
 public:
     using Measures = SimilarityData::Measures;
