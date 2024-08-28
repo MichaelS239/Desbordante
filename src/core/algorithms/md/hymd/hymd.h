@@ -15,6 +15,8 @@
 
 namespace algos::hymd {
 
+extern std::size_t switch_num;
+
 class HyMD final : public MdAlgorithm {
 private:
     using ColMatchesVector = std::vector<

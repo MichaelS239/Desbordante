@@ -20,6 +20,8 @@
 
 namespace algos::hymd {
 
+std::size_t switch_num = 0;
+
 HyMD::HyMD() : MdAlgorithm({}) {
     using namespace config::names;
     RegisterOptions();
@@ -158,8 +160,11 @@ unsigned long long HyMD::ExecuteInternal() {
     bool done = false;
     do {
         done = record_pair_inferrer.InferFromRecordPairs(lattice_traverser.TakeRecommendations());
+        ++switch_num;
         done = lattice_traverser.TraverseLattice(done);
+        ++switch_num;
     } while (!done);
+    --switch_num;
     LOG(DEBUG) << "Done!";
 
     RegisterResults(similarity_data, lattice.GetAll());
