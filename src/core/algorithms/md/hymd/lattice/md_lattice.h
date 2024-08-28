@@ -26,6 +26,8 @@
 
 namespace algos::hymd::lattice {
 
+extern bool delete_empty_nodes;
+
 class MdLattice {
 private:
     template <typename T>
