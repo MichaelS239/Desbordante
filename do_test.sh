@@ -7,6 +7,7 @@ path="test_results3"
 num_threads=0
 verbose=false
 no_levels=false
+delete_empty_nodes=true
 
 for i in "$@"
     do
@@ -24,6 +25,9 @@ for i in "$@"
         ;;
     -l|--no_levels)
         no_levels=true
+        ;;
+    -n|--no_delete_empty_nodes)
+        delete_empty_nodes=false
     esac
 done
 
@@ -35,6 +39,10 @@ fi
 
 if [[ $no_levels == true ]]; then
     options="$options -l"
+fi
+
+if [[ $delete_empty_nodes == false ]]; then
+    options="$options -n"
 fi
 
 #cpupower frequency-set -d 4.5GHz

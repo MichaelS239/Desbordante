@@ -55,6 +55,8 @@ extern std::atomic<unsigned int> raising_stopped;
 extern std::atomic<unsigned int> interestingness_stopped_immediately;
 extern std::size_t column_matches_size;
 
+extern bool delete_empty_nodes;
+
 class MdLattice {
 private:
     template <typename T>

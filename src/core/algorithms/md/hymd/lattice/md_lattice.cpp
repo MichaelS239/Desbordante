@@ -32,6 +32,7 @@ namespace algos::hymd::lattice {
 
 std::atomic<unsigned> empty_and_childless = 0;
 std::atomic<unsigned> total_nodes_checked = 0;
+bool delete_empty_nodes = true;
 
 void MdLattice::AddLevelStats(MdNode const& cur_node, std::vector<LevelStats>& level_stats,
                               std::size_t level) const {
@@ -534,7 +535,7 @@ std::size_t MdLattice::MdRefiner::Refine() {
         ++pair_inference_accepted;
     }
     lattice_->Specialize(GetLhs(), *pair_comparison_result_, invalidated_.GetInvalidated());
-    if (rhs.IsEmpty() && node_info_.node->IsEmpty()) {
+    if (rhs.IsEmpty() && node_info_.node->IsEmpty() && delete_empty_nodes) {
         lattice_->TryDeleteEmptyNode<false>(GetLhs());
     }
     return removed;
@@ -632,8 +633,11 @@ auto MdLattice::CollectRefinersForViolated(PairComparisonResult const& pair_comp
     util::EraseIfReplace(found, [this](MdRefiner& refiner) {
         bool const unsupported = IsUnsupported(refiner.GetLhs());
         if (unsupported) {
-            refiner.ZeroRhs();
-            TryDeleteEmptyNode<true>(refiner.GetLhs());
+            if (delete_empty_nodes) {
+                TryDeleteEmptyNode<true>(refiner.GetLhs());
+            } else {
+                refiner.ZeroRhs();
+            }
         }
         return unsupported;
     });
@@ -677,10 +681,14 @@ void MdLattice::MdVerificationMessenger::MarkUnsupported() {
     // This matters. Violation search can find a node with a specialized LHS but higher RHS column
     // classifier value ID, leading to extra work (though no influence on correctness, as MDs with
     // unsupported LHSs are filtered out).
-    ZeroRhs();
+    if (!delete_empty_nodes) {
+        ZeroRhs();
+    }
 
     lattice_->MarkUnsupported(GetLhs());
-    lattice_->TryDeleteEmptyNode<true>(GetLhs());
+    if (delete_empty_nodes) {
+        lattice_->TryDeleteEmptyNode<true>(GetLhs());
+    }
 }
 
 std::size_t traversal_lowered = 0;
@@ -698,7 +706,7 @@ void MdLattice::MdVerificationMessenger::LowerAndSpecialize(
             ++traversal_lowered;
     }
     lattice_->Specialize(GetLhs(), invalidated.GetInvalidated());
-    if (GetRhs().IsEmpty() && GetNode().IsEmpty()) {
+    if (GetRhs().IsEmpty() && GetNode().IsEmpty() && delete_empty_nodes) {
         lattice_->TryDeleteEmptyNode<false>(GetLhs());
     }
 }
@@ -868,8 +876,11 @@ auto MdLattice::GetLevel(std::size_t const level) -> std::vector<MdVerificationM
     util::EraseIfReplace(collected, [this](MdVerificationMessenger& messenger) {
         bool is_unsupported = IsUnsupported(messenger.GetLhs());
         if (is_unsupported) {
-            messenger.ZeroRhs();
-            TryDeleteEmptyNode<true>(messenger.GetLhs());
+            if (delete_empty_nodes) {
+                TryDeleteEmptyNode<true>(messenger.GetLhs());
+            } else {
+                messenger.ZeroRhs();
+            }
         }
         return is_unsupported;
     });
