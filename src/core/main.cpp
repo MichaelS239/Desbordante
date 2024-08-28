@@ -56,6 +56,8 @@ int main(int argc, char** argv) {
     hymd.SetOption("column_matches");
     hymd.Execute();
     auto const& md_list = hymd.MdList();
+    std::cout << "Number of phase switches: " << algos::hymd::switch_num << std::endl;
+    std::cout << std::endl;
     std::cout << "Pair inference found not minimal: " << algos::hymd::pair_inference_not_minimal
               << std::endl;
     std::cout << "Pair inference found trivial: " << algos::hymd::pair_inference_trivial
