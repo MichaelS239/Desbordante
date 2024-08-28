@@ -26,6 +26,8 @@
 
 namespace algos::hymd {
 
+std::size_t switch_num = 0;
+
 using model::Index;
 
 HyMD::HyMD() : MdAlgorithm({}) {
@@ -188,10 +190,13 @@ unsigned long long HyMD::ExecuteInternal() {
             {pool_ptr, records_info_.get(), similarity_data.GetColumnMatchesInfo(), min_support_,
              &lattice},
             pool_ptr};
+    ++switch_num;
     done = lattice_traverser.TraverseLattice(done);
 
     while (!done) {
+        ++switch_num;
         done = record_pair_inferrer.InferFromRecordPairs(lattice_traverser.TakeRecommendations());
+        ++switch_num;
         done = lattice_traverser.TraverseLattice(done);
     }
     LOG(DEBUG) << "Done!";
