@@ -11,6 +11,10 @@ namespace algos::hymd::lattice {
 struct MdLatticeNodeInfo {
     MdLhs lhs;
     MdNode* node;
+
+    void ZeroRhs() {
+        node->rhs.ZeroRhs();
+    }
 };
 
 }  // namespace algos::hymd::lattice
