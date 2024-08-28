@@ -1,28 +1,22 @@
 #!/bin/bash
 
-begin_commit=$(git rev-parse --short HEAD)
-end_commit=$(git log --oneline --grep="Add main testing script" --pretty=format:"%h")
-commits_to_revert=$(git log HEAD...$end_commit --pretty=format:"%h")
-for commit in $commits_to_revert
-    do
-    git revert --no-edit $commit
-done
+git checkout hymd-experiments2
 ./build.sh -n -j$(nproc)
-git reset --hard $begin_commit
 ./do_test.sh --mode=performance -v --dataset_path=./test_datasets/performance --path=./test_performance/optimized
 ./do_test.sh --mode=performance -v --dataset_path=./test_datasets/columns --path=./test_performance/columns
 ./do_test.sh --mode=performance -v --dataset_path=./test_datasets/rows --path=./test_performance/rows
-git checkout hymd-experiments-original
-./build.sh -n -j$(nproc)
-./do_test.sh --mode=performance -v --dataset_path=./test_datasets/performance --path=./test_performance/original
-#git checkout hymd-experiments2
-#./build.sh -n -j$(nproc)
 #for i in {1..$(nproc)}; do
 #    ./do_test.sh --mode=performance -v -t$i --path=./test_performance/thread$i
 #done
 #./do_test.sh --mode=performance -v -l --path=./test_performance/no_levels
 #./do_test.sh --mode=performance -v -n --path=./test_performance/no_delete_empty_nodes
+git checkout hymd-experiments-original
+./build.sh -n -j$(nproc)
+./do_test.sh --mode=performance -v --dataset_path=./test_datasets/performance --path=./test_performance/original
+#git checkout hymd-experiments2-stats
 #./build.sh -n -j$(nproc)
-#./do_test.sh --mode=stats -v --path=./test_stats
+#./do_test.sh --mode=stats -v --dataset_path=./test_datasets/stats --path=./test_stats_optimized
+#./do_test.sh --mode=stats -v -l --dataset_path=./test_datasets/stats --path=./test_stats_no_levels
+#./do_test.sh --mode=stats -v -n --dataset_path=./test_datasets/stats --path=./test_stats_no_delete_empty_nodes
 #./build.sh -n -p -j$(nproc)
-#./do_test.sh --mode=python -v --path=./test_python
+#./do_test.sh --mode=python -v --dataset_path=./test_datasets/stats --path=./test_python

@@ -28,7 +28,8 @@ void BindInd(py::module_& main_module) {
 
     auto ind_algos_module =
             BindPrimitive<Spider, Faida, Mind>(ind_module, &INDAlgorithm::INDList, "IndAlgorithm",
-                                               "get_inds", {kSpiderName, "Faida", kMindName});
+                                               "get_inds", {kSpiderName, "Faida", kMindName})
+                    .first;
     auto define_submodule = [&ind_algos_module, &main_module](char const* name,
                                                               std::vector<char const*> algorithms) {
         auto algos_module = main_module.def_submodule(name).def_submodule("algorithms");

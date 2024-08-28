@@ -71,7 +71,7 @@ auto BindPrimitive(pybind11::module_& module, auto result_method, char const* ba
     auto default_module = detail::RegisterAlgorithm<Default, Base>(algos_module, *arr_iter++);
     (detail::RegisterAlgorithm<Others, Base>(algos_module, *arr_iter++), ...);
     algos_module.attr("Default") = default_module;
-    return algos_module;
+    return std::pair{algos_module, default_module};
 }
 
 template <typename AlgorithmType>

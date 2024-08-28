@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstddef>
 #include <limits>
+#include <sstream>
+#include <string>
 
 #define ELPP_STL_LOGGING
 #include <easylogging++.h>
@@ -10,6 +12,7 @@
 #include "algorithms/md/hymd/lattice/cardinality/min_picking_level_getter.h"
 #include "algorithms/md/hymd/lattice/md_lattice.h"
 #include "algorithms/md/hymd/lattice/single_level_func.h"
+#include "algorithms/md/hymd/lattice/total_generalization_checker.h"
 #include "algorithms/md/hymd/lattice_traverser.h"
 #include "algorithms/md/hymd/lowest_bound.h"
 #include "algorithms/md/hymd/lowest_cc_value_id.h"
@@ -23,6 +26,16 @@
 #include "model/index.h"
 #include "model/table/column.h"
 #include "util/worker_thread_pool.h"
+
+namespace {
+std::string MaxHitToString(auto&& arr, std::size_t column_matches) {
+    std::stringstream ss;
+    for (model::Index i = 0; i != column_matches; ++i) {
+        ss << arr[i] << " ";
+    }
+    return ss.str();
+}
+}  // namespace
 
 namespace algos::hymd {
 
@@ -312,6 +325,60 @@ void HyMD::RegisterResults(SimilarityData const& similarity_data,
     for (model::MD const& md : mds) {
         RegisterMd(md);
     }
+}
+
+std::string HyMD::GetStats(bool verbose) const {
+    std::stringstream ss;
+    auto const& md_list = MdList();
+    ss << "Number of phase switches: " << algos::hymd::switch_num << '\n';
+    ss << '\n';
+    ss << "Pair inference found not minimal: " << algos::hymd::lattice::pair_inference_not_minimal
+       << '\n';
+    ss << "Pair inference found trivial: " << algos::hymd::lattice::pair_inference_trivial << '\n';
+    ss << "Pair inference lowered to 0: " << algos::hymd::lattice::pair_inference_lowered_to_zero
+       << '\n';
+    ss << "Pair inference lowered to not 0: "
+       << algos::hymd::lattice::pair_inference_lowered_non_zero << '\n';
+    ss << "Pair inference no violation discovered: "
+       << algos::hymd::lattice::pair_inference_accepted << '\n';
+    ss << '\n';
+    ss << "Validations: " << algos::hymd::validations << '\n';
+    ss << "Confirmed by validation: " << algos::hymd::confirmed << '\n';
+    ss << "Lowered to not 0 during lattice traversal: " << algos::hymd::lattice::traversal_lowered
+       << '\n';
+    ss << "Lowered to 0 (deleted) during lattice traversal: "
+       << algos::hymd::lattice::traversal_deleted << '\n';
+    ss << "Unsupported: " << algos::hymd::unsupported << '\n';
+    ss << '\n';
+    ss << "Total interestingness CCV ID searches: "
+       << algos::hymd::lattice::get_interestingness_ccv_ids_called << '\n';
+    ss << "Max CCV IDs detected for all column matches during raising: "
+       << algos::hymd::lattice::raising_stopped << '\n';
+    ss << "Started interestingness bound search with max bounds for all column matches: "
+       << algos::hymd::lattice::interestingness_stopped_immediately << '\n';
+    ss << "Interestingness CCV ID requested for every column match: "
+       << MaxHitToString(algos::hymd::lattice::interestingness_indices_requested,
+                         algos::hymd::lattice::column_matches_size)
+       << '\n';
+    ss << "Max CCV ID hit for every column match: "
+       << MaxHitToString(algos::hymd::lattice::interestingness_indices_hit,
+                         algos::hymd::lattice::column_matches_size)
+       << '\n';
+    ss << "Started with max CCV ID for every column match: "
+       << MaxHitToString(algos::hymd::lattice::interestingness_indices_max_started,
+                         algos::hymd::lattice::column_matches_size)
+       << '\n';
+    ss << '\n';
+    ss << "Useless nodes in generalizations: " << algos::hymd::lattice::empty_and_childless << "/"
+       << algos::hymd::lattice::total_nodes_checked << '\n';
+    ss << '\n';
+    ss << "Found " << md_list.size() << " MDs" << '\n';
+    if (verbose) {
+        for (auto const& md : md_list) {
+            ss << md.ToStringShort() << '\n';
+        }
+    }
+    return ss.str();
 }
 
 }  // namespace algos::hymd

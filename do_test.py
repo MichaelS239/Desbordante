@@ -19,3 +19,4 @@ level_def = "lattice" if no_levels else "cardinality"
 algo = desbordante.md.algorithms.HyMD()
 algo.load_data(left_table = (table, separator, has_header))
 algo.execute(threads = num_threads,level_definition = level_def)
+print(algo.get_stats())
