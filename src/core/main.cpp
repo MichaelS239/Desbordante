@@ -5,6 +5,7 @@
 
 #include "algorithms/md/hymd/enums.h"
 #include "algorithms/md/hymd/hymd.h"
+#include "algorithms/md/hymd/lattice/md_lattice.h"
 #include "algorithms/md/hymd/preprocessing/similarity_measure/levenshtein_similarity_measure.h"
 #include "parser/csv_parser/csv_parser.h"
 
@@ -41,6 +42,7 @@ int main(int argc, char** argv) {
             }
         }
     }
+    algos::hymd::lattice::delete_empty_nodes = delete_empty_nodes;
 
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
