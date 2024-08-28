@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <type_traits>
 
 #include "algorithms/md/hymd/md_element.h"
@@ -7,6 +8,10 @@
 #include "model/index.h"
 
 namespace algos::hymd::lattice {
+extern std::atomic<unsigned> empty_and_childless;
+extern std::atomic<unsigned> total_nodes_checked;
+class MdNode;
+
 template <typename NodeType, typename Unspecialized = NodeType::Specialization::Unspecialized>
 class TotalGeneralizationChecker {
     using CCVIdChildMap = NodeType::OrderedCCVIdChildMap;
@@ -38,6 +43,13 @@ public:
     bool HasGeneralizationInChildren(NodeType const& node, MdLhs::iterator next_iter,
                                      model::Index child_array_index = 0) {
         MdLhs const& lhs = NodeType::GetLhs(unspecialized_);
+        ++total_nodes_checked;
+        if constexpr (std::is_same_v<NodeType, MdNode>)
+            if (std::all_of(node.children.begin(), node.children.end(),
+                            [](auto const& v) { return !v.HasValue(); }) &&
+                node.rhs.IsEmpty())
+                ++empty_and_childless;
+
         for (MdLhs::iterator end_iter = lhs.end(); next_iter != end_iter; ++child_array_index) {
             auto const& [index_delta, lhs_ccv_id] = *next_iter;
             child_array_index += index_delta;

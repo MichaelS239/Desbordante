@@ -7,6 +7,7 @@
 
 #include "algorithms/md/hymd/hymd.h"
 #include "algorithms/md/hymd/lattice/md_lattice.h"
+#include "algorithms/md/hymd/lattice/total_generalization_checker.h"
 #include "algorithms/md/hymd/preprocessing/similarity_measure/levenshtein_similarity_measure.h"
 #include "algorithms/md/hymd/validator.h"
 #include "parser/csv_parser/csv_parser.h"
@@ -27,11 +28,24 @@ std::string MaxHitToString(auto&& arr, std::size_t column_matches) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 4 && argc != 5) std::terminate();
+    if (argc != 4 && argc != 5 && argc != 6) std::terminate();
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
-    unsigned short num_threads = argc == 4 ? 0 : (unsigned short)std::strtoul(argv[4], NULL, 10);
+    bool verbose = false;
+    unsigned short num_threads = 0;
+    if (argc == 5) {
+        if (argv[4][0] == '-' && argv[4][1] == 'v') {
+            verbose = true;
+        } else {
+            num_threads = (unsigned short)std::strtoul(argv[4], NULL, 10);
+        }
+    } else if (argc == 6) {
+        if (argv[4][0] == '-' && argv[4][1] == 'v') {
+            verbose = true;
+        }
+        num_threads = (unsigned short)std::strtoul(argv[5], NULL, 10);
+    }
 
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
@@ -46,6 +60,7 @@ int main(int argc, char** argv) {
         hymd.SetOption("threads", num_threads);
     else
         hymd.SetOption("threads");
+    hymd.SetOption("level_definition");
 
     /*
     std::vector<std::tuple<std::string, std::string,
@@ -102,10 +117,15 @@ int main(int argc, char** argv) {
                                 algos::hymd::lattice::column_matches_size)
               << std::endl;
     std::cout << std::endl;
+    std::cout << "Useless nodes in generalizations: " << algos::hymd::lattice::empty_and_childless
+              << "/" << algos::hymd::lattice::total_nodes_checked << std::endl;
+    std::cout << std::endl;
     std::cout << "Found " << md_list.size() << " MDs" << std::endl;
-    /*for (auto const& md : md_list) {
-        std::cout << md.ToStringShort() << std::endl;
-    }*/
+    if (verbose) {
+        for (auto const& md : md_list) {
+            std::cout << md.ToStringShort() << std::endl;
+        }
+    }
 
     return 0;
 }
