@@ -93,6 +93,10 @@ public:
             return node_info_.lhs;
         }
 
+        void ZeroRhs() {
+            node_info_.ZeroRhs();
+        }
+
         std::size_t Refine();
 
         bool InvalidatedNumber() const noexcept {
@@ -121,6 +125,10 @@ public:
         }
 
         void MarkUnsupported();
+
+        void ZeroRhs() {
+            node_info_.ZeroRhs();
+        }
 
         void LowerAndSpecialize(utility::InvalidatedRhss const& invalidated);
     };
