@@ -6,6 +6,7 @@
 path="test_results3"
 num_threads=0
 verbose=false
+no_levels=false
 
 for i in "$@"
     do
@@ -20,6 +21,9 @@ for i in "$@"
         ;;
     -v|--verbose)
         verbose=true
+        ;;
+    -l|--no_levels)
+        no_levels=true
     esac
 done
 
@@ -27,6 +31,10 @@ options="$num_threads"
 
 if [[ $verbose == true ]]; then
     options="$options -v"
+fi
+
+if [[ $no_levels == true ]]; then
+    options="$options -l"
 fi
 
 #cpupower frequency-set -d 4.5GHz
