@@ -28,13 +28,13 @@ namespace python_bindings {
 PYBIND11_MODULE(desbordante, module) {
     using namespace pybind11::literals;
 
-    if (std::filesystem::exists("logging.conf")) {
+    /*if (std::filesystem::exists("logging.conf")) {
         el::Loggers::configureFromGlobal("logging.conf");
     } else {
         el::Configurations conf;
         conf.set(el::Level::Global, el::ConfigurationType::Enabled, "false");
         el::Loggers::reconfigureAllLoggers(conf);
-    }
+    }*/
 
     for (auto bind_func :
          {BindMainClasses, BindDataTypes, BindFd, BindCfd, BindAr, BindUcc, BindAc, BindOd,
