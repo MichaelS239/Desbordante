@@ -3,7 +3,7 @@
 #current_date_time="`date +%Y_%m_%d_%H:%M:%S`"
 #echo $current_date_time
 #path="test_results_$current_date_time"
-path="test_results"
+path="test_results3"
 num_threads=0
 verbose=false
 
@@ -17,6 +17,7 @@ for i in "$@"
     -p*|--path=*)
         path=${i#-p}
         path=${path#--path=}
+        ;;
     -v|--verbose)
         verbose=true
     esac
@@ -44,14 +45,14 @@ done
 #    done
 #done
 
-for dataset in cddb; do
-    echo "Started $dataset"
-    mkdir -p $path/$dataset
-    for i in {0..4}; do
-        echo "Run $i"
+#for dataset in cddb; do
+#    echo "Started $dataset"
+#    mkdir -p $path/$dataset
+#    for i in {0..4}; do
+#        echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 1 $num_threads $verbose> $path/$dataset/log$i.txt
-    done
-done
+#        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 1 $num_threads $verbose> $path/$dataset/log$i.txt
+#    done
+#done
 #cpupower frequency-set -d 0.8GHz
 #cpupower frequency-set -u 4.5GHz
