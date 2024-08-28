@@ -8,6 +8,7 @@ num_threads=0
 verbose=false
 no_levels=false
 delete_empty_nodes=true
+use_python=false
 
 for i in "$@"
     do
@@ -28,8 +29,15 @@ for i in "$@"
         ;;
     -n|--no_delete_empty_nodes)
         delete_empty_nodes=false
+        ;;
+    -u|--use_python)
+        use_python=true
     esac
 done
+
+if [[ $use_python == true ]]; then
+    cp do_test.py ./build/target/do_test.py
+fi
 
 options="$num_threads"
 
@@ -41,7 +49,7 @@ if [[ $no_levels == true ]]; then
     options="$options -l"
 fi
 
-if [[ $delete_empty_nodes == false ]]; then
+if [[ $delete_empty_nodes == false ]] && [[ $use_python == false ]]; then
     options="$options -n"
 fi
 
@@ -53,7 +61,11 @@ for dataset in cora flights adult restaurants; do
     for i in {0..4}; do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 0 $options> $path/$dataset/log$i.txt
+        if [[ $use_python == false ]]; then
+            ./build/target/Desbordante_run ./build/target/input_data/$dataset.tsv $'\t' 0 $options > $path/$dataset/log$i.txt
+        else
+            python3 ./build/target/do_test.py ./build/target/input_data/$dataset.tsv $'\t' 0 $options > $path/$dataset/log$i.txt
+        fi
     done
 done
 
