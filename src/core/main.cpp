@@ -16,13 +16,14 @@ INITIALIZE_EASYLOGGINGPP
 //  constexpr bool kHasHeader = true;
 
 int main(int argc, char** argv) {
-    if (argc < 5 || argc > 7) std::terminate();
+    if (argc < 5 || argc > 8) std::terminate();
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
     unsigned short num_threads = (unsigned short)std::strtoul(argv[4], NULL, 10);
     bool verbose = false;
     bool no_levels = false;
+    bool delete_empty_nodes = true;
     for (int i = 5; i != argc; ++i) {
         if (argv[i][0] == '-') {
             switch (argv[i][1]) {
@@ -31,6 +32,9 @@ int main(int argc, char** argv) {
                     break;
                 case 'l':
                     no_levels = true;
+                    break;
+                case 'n':
+                    delete_empty_nodes = false;
                     break;
                 default:
                     break;

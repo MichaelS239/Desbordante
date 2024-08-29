@@ -8,6 +8,7 @@ dataset_path="test_datasets"
 num_threads=0
 verbose=false
 no_levels=false
+delete_empty_nodes=true
 mode="stats"
 
 for i in "$@"
@@ -31,6 +32,9 @@ for i in "$@"
     -l|--no_levels)
         no_levels=true
         ;;
+    -n|--no_delete_empty_nodes)
+        delete_empty_nodes=false
+        ;;
     -m*|--mode=*)
         mode=${i#-m}
         mode=${mode#--mode=}
@@ -45,6 +49,10 @@ fi
 
 if [[ $no_levels == true ]]; then
     options="$options -l"
+fi
+
+if [[ $delete_empty_nodes == false ]]; then
+    options="$options -n"
 fi
 
 run_number=0
