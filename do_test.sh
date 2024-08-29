@@ -7,6 +7,7 @@ path="test_results"
 dataset_path="test_datasets"
 num_threads=0
 verbose=false
+no_levels=false
 mode="stats"
 
 for i in "$@"
@@ -27,6 +28,9 @@ for i in "$@"
     -v|--verbose)
         verbose=true
         ;;
+    -l|--no_levels)
+        no_levels=true
+        ;;
     -m*|--mode=*)
         mode=${i#-m}
         mode=${mode#--mode=}
@@ -37,6 +41,10 @@ options="$num_threads"
 
 if [[ $verbose == true ]]; then
     options="$options -v"
+fi
+
+if [[ $no_levels == true ]]; then
+    options="$options -l"
 fi
 
 run_number=0
