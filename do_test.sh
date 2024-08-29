@@ -33,6 +33,12 @@ for i in "$@"
     esac
 done
 
+options="$num_threads"
+
+if [[ $verbose == true ]]; then
+    options="$options -v"
+fi
+
 run_number=0
 if [[ $mode == "performance" ]]; then
     run_number=5
@@ -54,7 +60,7 @@ while read -r dataset_info; do
     for ((i=1;i<=run_number;i++)); do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $num_threads $verbose > $path/$dataset/log$i.txt
+        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
     done
 done < $dataset_path/datasets_info.txt
 #cpupower frequency-set -d 0.8GHz
