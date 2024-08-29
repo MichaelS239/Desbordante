@@ -15,10 +15,11 @@ INITIALIZE_EASYLOGGINGPP
 //  constexpr bool kHasHeader = true;
 
 int main(int argc, char** argv) {
-    if (argc != 4) std::terminate();
+    if (argc != 5) std::terminate();
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
+    unsigned short num_threads = (unsigned short)std::strtoul(argv[4], NULL, 10);
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
     config::InputTable t = std::make_shared<CSVParser>(path, separator, has_header);
@@ -28,7 +29,10 @@ int main(int argc, char** argv) {
     hymd.SetOption("min_support");
     hymd.SetOption("prune_nondisjoint");
     hymd.SetOption("max_cardinality");
-    hymd.SetOption("threads");
+    if (num_threads)
+        hymd.SetOption("threads", num_threads);
+    else
+        hymd.SetOption("threads");
     hymd.SetOption("level_definition");
 
     /*
