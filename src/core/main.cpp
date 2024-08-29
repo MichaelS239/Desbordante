@@ -9,10 +9,10 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-//std::string const kPath =
-//        "/home/buyt/Projects/desb_forks/buyt-1/Desbordante/flights.tsv";
-// constexpr char kSeparator = ',';
-// constexpr bool kHasHeader = true;
+// std::string const kPath =
+//         "/home/buyt/Projects/desb_forks/buyt-1/Desbordante/flights.tsv";
+//  constexpr char kSeparator = ',';
+//  constexpr bool kHasHeader = true;
 
 int main(int argc, char** argv) {
     if (argc != 4) std::terminate();
@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
     hymd.SetOption("prune_nondisjoint");
     hymd.SetOption("max_cardinality");
     hymd.SetOption("threads");
+    hymd.SetOption("level_definition");
 
     /*
     std::vector<std::tuple<std::string, std::string,
@@ -51,6 +52,6 @@ int main(int argc, char** argv) {
     for (auto const& md : md_list) {
         std::cout << md.ToStringShort() << std::endl;
     }
-
+    std::cout << std::endl;
     return 0;
 }
