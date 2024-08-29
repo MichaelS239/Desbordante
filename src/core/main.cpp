@@ -15,11 +15,19 @@ INITIALIZE_EASYLOGGINGPP
 //  constexpr bool kHasHeader = true;
 
 int main(int argc, char** argv) {
-    if (argc != 5) std::terminate();
+    if (argc < 5 || argc > 6) std::terminate();
     std::string path = argv[1];
     char separator = argv[2][0];
     bool has_header = argv[3][0] == '1' ? true : false;
     unsigned short num_threads = (unsigned short)std::strtoul(argv[4], NULL, 10);
+    bool verbose = false;
+    for (int i = 5; i != argc; ++i) {
+        if (argv[i][0] == '-' && argv[i][1] == 'v') {
+            verbose = true;
+            break;
+        }
+    }
+
     LOG(DEBUG) << "Started";
     algos::hymd::HyMD hymd;
     config::InputTable t = std::make_shared<CSVParser>(path, separator, has_header);
@@ -53,8 +61,10 @@ int main(int argc, char** argv) {
     hymd.Execute();
     auto const& md_list = hymd.MdList();
     std::cout << "Found " << md_list.size() << " MDs" << std::endl;
-    for (auto const& md : md_list) {
-        std::cout << md.ToStringShort() << std::endl;
+    if (verbose) {
+        for (auto const& md : md_list) {
+            std::cout << md.ToStringShort() << std::endl;
+        }
     }
     std::cout << std::endl;
     return 0;
