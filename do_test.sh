@@ -5,6 +5,7 @@
 #path="test_results_$current_date_time"
 path="test_results"
 dataset_path="test_datasets"
+verbose=false
 
 for i in "$@"
     do
@@ -16,6 +17,9 @@ for i in "$@"
     -d*|--dataset_path=*)
         path=${i#-p}
         path=${path#--path=}
+        ;;
+    -v|--verbose)
+        verbose=true
     esac
 done
 
@@ -31,7 +35,7 @@ while read -r dataset_info; do
     for i in {0..4}; do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info > $path/$dataset/log$i.txt
+        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $verbose > $path/$dataset/log$i.txt
     done
 done < $dataset_path/datasets_info.txt
 #cpupower frequency-set -d 0.8GHz
