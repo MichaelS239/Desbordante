@@ -1,0 +1,4 @@
+cora_fix.tsv \t 0
+flights.tsv \t 0
+adult.tsv \t 0
+restaurants.tsv \t 0
