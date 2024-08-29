@@ -6,6 +6,7 @@
 path="test_results"
 dataset_path="test_datasets"
 num_threads=0
+verbose=false
 mode="stats"
 
 for i in "$@"
@@ -22,6 +23,9 @@ for i in "$@"
     -t*|--threads=*)
         num_threads=${i#-t}
         num_threads=${num_threads#--threads=}
+        ;;
+    -v|--verbose)
+        verbose=true
         ;;
     -m*|--mode=*)
         mode=${i#-m}
@@ -50,7 +54,7 @@ while read -r dataset_info; do
     for ((i=1;i<=run_number;i++)); do
         echo "Run $i"
         #echo 3 > /proc/sys/vm/drop_caches
-        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $num_threads > $path/$dataset/log$i.txt
+        /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $num_threads $verbose > $path/$dataset/log$i.txt
     done
 done < $dataset_path/datasets_info.txt
 #cpupower frequency-set -d 0.8GHz
