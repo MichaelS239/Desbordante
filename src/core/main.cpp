@@ -35,8 +35,6 @@ int main(int argc, char** argv) {
     hymd.LoadData();
     hymd.SetOption("min_support");
     hymd.SetOption("prune_nondisjoint");
-    hymd.SetOption("max_cardinality");
-    hymd.SetOption("threads");
 
     /*
     std::vector<std::tuple<std::string, std::string,
