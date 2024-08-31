@@ -9,10 +9,10 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-//std::string const kPath =
-//        "/home/buyt/Projects/desb_forks/buyt-1/Desbordante/flights.tsv";
-// constexpr char kSeparator = ',';
-// constexpr bool kHasHeader = true;
+// std::string const kPath =
+//         "/home/buyt/Projects/desb_forks/buyt-1/Desbordante/flights.tsv";
+//  constexpr char kSeparator = ',';
+//  constexpr bool kHasHeader = true;
 
 int main(int argc, char** argv) {
     if (argc != 4) std::terminate();
@@ -51,6 +51,6 @@ int main(int argc, char** argv) {
     for (auto const& md : md_list) {
         std::cout << md.ToStringShort() << std::endl;
     }
-
+    std::cout << std::endl;
     return 0;
 }
