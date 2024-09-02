@@ -1,0 +1,10 @@
+cora_fix10.tsv \t 0
+cora_fix20.tsv \t 0
+cora_fix30.tsv \t 0
+cora_fix40.tsv \t 0
+cora_fix50.tsv \t 0
+cora_fix60.tsv \t 0
+cora_fix70.tsv \t 0
+cora_fix80.tsv \t 0
+cora_fix90.tsv \t 0
+cora_fix100.tsv \t 0
