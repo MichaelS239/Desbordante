@@ -1,0 +1,16 @@
+cora_fix1.tsv \t 0
+cora_fix2.tsv \t 0
+cora_fix3.tsv \t 0
+cora_fix4.tsv \t 0
+cora_fix5.tsv \t 0
+cora_fix6.tsv \t 0
+cora_fix7.tsv \t 0
+cora_fix8.tsv \t 0
+cora_fix9.tsv \t 0
+cora_fix10.tsv \t 0
+cora_fix11.tsv \t 0
+cora_fix12.tsv \t 0
+cora_fix13.tsv \t 0
+cora_fix14.tsv \t 0
+cora_fix15.tsv \t 0
+cora_fix16.tsv \t 0
