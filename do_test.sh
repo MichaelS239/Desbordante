@@ -76,6 +76,7 @@ while read -r dataset_info; do
     dataset=${dataset_info%%$" "*}
     separator=${dataset_info%$" "*}
     separator=${separator##*$" "}
+    has_header=${dataset_info##*$" "}
     dataset_info=$(echo -e $dataset_info)
     echo "Started $dataset"
     mkdir -p $path/$dataset
@@ -85,7 +86,15 @@ while read -r dataset_info; do
         if [[ $mode == "python" ]]; then
             /usr/bin/time -v -o $path/$dataset/log$i.txt -a python3 ./build/target/do_test.py $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
         elif [[ $mode == "metanome" ]]; then
-            /usr/bin/time -v -o $path/$dataset/log$i.txt -a java -cp metanome-cli-1.2-SNAPSHOT.jar:HyMD-1.2-SNAPSHOT.jar de.metanome.cli.App --algorithm de.metanome.algorithms.hymd.HyMD --tables $dataset_path/$dataset --separator $separator --table-key RELATION > $path/$dataset/log$i.txt
+            snapshot="HyMD-1.2-SNAPSHOT.jar"
+            header=""
+            if [[ $dataset == "cora_fix.tsv" ]]; then
+                snapshot="HyMD-1.2-SNAPSHOT-1.jar"
+            fi
+            if [[ $has_header == "1" ]]; then
+                header=" --header "
+            fi
+            java -cp metanome-cli-1.2-SNAPSHOT.jar:$snapshot de.metanome.cli.App --algorithm de.metanome.algorithms.hymd.HyMD --tables $dataset_path/$dataset$header--separator $separator --table-key RELATION -o file --algorithm-config CONFIG:'{"schema_mapper": {"type": "self"}}' SUPPORT:1 &> $path/$dataset/log$i.txt
         else
             /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
         fi
