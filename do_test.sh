@@ -94,7 +94,7 @@ while read -r dataset_info; do
             if [[ $has_header == "1" ]]; then
                 header=" --header "
             fi
-            java -cp metanome-cli-1.2-SNAPSHOT.jar:$snapshot de.metanome.cli.App --algorithm de.metanome.algorithms.hymd.HyMD --tables $dataset_path/$dataset$header--separator $separator --table-key RELATION -o file --algorithm-config CONFIG:'{"schema_mapper": {"type": "self"}}' SUPPORT:1 &> $path/$dataset/log$i.txt
+            /usr/bin/time -v -o $path/$dataset/log$i.txt -a java -Dtinylog.configuration=./tinylog.properties -cp metanome-cli-1.2-SNAPSHOT.jar:$snapshot de.metanome.cli.App --algorithm de.metanome.algorithms.hymd.HyMD --tables $dataset_path/$dataset$header--separator $separator --table-key RELATION -o print --algorithm-config CONFIG:'{"schema_mapper": {"type": "self"}}' SUPPORT:1 &> $path/$dataset/log$i.txt
         else
             /usr/bin/time -v -o $path/$dataset/log$i.txt -a ./build/target/Desbordante_run $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
         fi
