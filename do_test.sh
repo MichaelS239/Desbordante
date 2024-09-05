@@ -87,8 +87,8 @@ while read -r dataset_info; do
             /usr/bin/time -v -o $path/$dataset/log$i.txt -a python3 ./build/target/do_test.py $dataset_path/$dataset_info $options > $path/$dataset/log$i.txt
         elif [[ $mode == "metanome" ]]; then
             snapshot="HyMD-1.2-SNAPSHOT.jar"
-            header=""
-            if [[ $dataset == "cora_fix.tsv" ]]; then
+            header=" "
+            if [[ "$dataset" == *"cora_fix"* ]]; then
                 snapshot="HyMD-1.2-SNAPSHOT-1.jar"
             fi
             if [[ $has_header == "1" ]]; then

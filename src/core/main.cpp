@@ -5,7 +5,8 @@
 
 #include "algorithms/md/hymd/enums.h"
 #include "algorithms/md/hymd/hymd.h"
-#include "algorithms/md/hymd/preprocessing/similarity_measure/levenshtein_similarity_measure.h"
+#include "algorithms/md/hymd/preprocessing/similarity_measure/monge_elkan_similarity_measure.h"
+#include "algorithms/md/hymd/similarity_data.h"
 #include "parser/csv_parser/csv_parser.h"
 
 INITIALIZE_EASYLOGGINGPP
@@ -61,21 +62,20 @@ int main(int argc, char** argv) {
         hymd.SetOption("level_definition");
     }
 
-    /*
-    std::vector<std::tuple<std::string, std::string,
-                           std::shared_ptr<algos::hymd::SimilarityMeasureCreator>>>
-            col_matches{
-                    {"2", "2",
-                     std::make_shared<algos::hymd::preprocessing::similarity_measure::
-                                              LevenshteinSimilarityMeasure::Creator>(0.45)},
-                    {"3", "3",
-                     std::make_shared<algos::hymd::preprocessing::similarity_measure::
-                                              LevenshteinSimilarityMeasure::Creator>(0.45)},
-            };
-    hymd.SetOption("column_matches", col_matches);
-    */
+    if (path.find("cora_fix") != std::string::npos) {
+        algos::hymd::SimilarityData::Measures column_matches_option;
+        std::size_t num_columns = t->GetNumberOfColumns();
+        column_matches_option.reserve(num_columns);
+        for (model::Index i = 0; i != num_columns; ++i) {
+            column_matches_option.push_back(
+                    std::make_shared<algos::hymd::preprocessing::similarity_measure::
+                                             MongeElkanSimilarityMeasure>(i, i, 0.7));
+        }
+        hymd.SetOption("column_matches", column_matches_option);
+    } else {
+        hymd.SetOption("column_matches");
+    }
 
-    hymd.SetOption("column_matches");
     hymd.Execute();
     auto const& md_list = hymd.MdList();
     std::cout << "Found " << md_list.size() << " MDs" << std::endl;
