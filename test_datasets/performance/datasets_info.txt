@@ -2,3 +2,7 @@ cora_fix.tsv \t 0
 flights.tsv \t 0
 adult.tsv \t 0
 restaurants.tsv \t 0
+cddb.tsv \t 1
+breast_cancer.csv , 1
+CIPublicHighway50k.csv , 1
+notebook_ascii.csv , 1
