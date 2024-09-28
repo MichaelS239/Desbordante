@@ -57,11 +57,11 @@ void Split::LoadDataInternal() {
 void Split::SetLimits() {
     if (num_rows_ > typed_relation_->GetNumRows()) {
         throw std::invalid_argument(
-                "\"num_rows\" must be less or equal to the number of rows in the table");
+                "'num_rows' must be less or equal to the number of rows in the table");
     }
     if (num_columns_ > typed_relation_->GetNumColumns()) {
         throw std::invalid_argument(
-                "\"num_columns\" must be less or equal to the number of columns in the table");
+                "'num_columns' must be less or equal to the number of columns in the table");
     }
     if (num_rows_ == 0) num_rows_ = typed_relation_->GetNumRows();
     if (num_columns_ == 0) num_columns_ = typed_relation_->GetNumColumns();
@@ -74,10 +74,10 @@ void Split::ParseDifferenceTable() {
         difference_typed_relation_ =
                 model::ColumnLayoutTypedRelationData::CreateFrom(*difference_table_,
                                                                  false);  // nulls are ignored
-        if (typed_relation_->GetNumColumns() != difference_typed_relation_->GetNumColumns()) {
+        if (typed_relation_->GetNumColumns() != num_columns_) {
             throw std::invalid_argument(
                     "The number of columns in the difference table must be equal to the number of "
-                    "columns in the loaded table");
+                    "columns in the loaded table or to 'num_columns' if specified");
         }
     }
 }
