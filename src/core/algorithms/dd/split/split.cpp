@@ -90,6 +90,7 @@ unsigned long long Split::ExecuteInternal() {
     LOG(DEBUG) << "Start";
 
     CalculateAllDistances();
+    CalculateIndexSearchSpaces();
 
     if (reduce_method_ == +Reduce::IEHybrid) {
         CalculateTuplePairs();
@@ -99,11 +100,11 @@ unsigned long long Split::ExecuteInternal() {
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
     LOG(DEBUG) << "Current time: " << elapsed_milliseconds.count();
-    LOG(INFO) << "Minimum and maximum distances for each column:";
+    LOG(INFO) << "Minimum and maximum distances for each column with non-empty search space:";
 
     for (model::ColumnIndex index = 0; index < num_columns_; index++)
-        LOG(INFO) << input_table_->GetColumnName(index) << ": " << min_max_dif_[index].lower_bound
-                  << ", " << min_max_dif_[index].upper_bound;
+        LOG(INFO) << input_table_->GetColumnName(non_empty_cols_[index]) << ": "
+                  << min_max_dif_[index].lower_bound << ", " << min_max_dif_[index].upper_bound;
 
     unsigned const search_size = ReduceDDs(start_time);
 
@@ -142,7 +143,8 @@ unsigned Split::ReduceDDs(auto const& start_time) {
         search = SearchSpace(indices);
         dfs_y = SearchSpace(index);
         search_size += search.size() * (dfs_y.size() - 1);
-        LOG(DEBUG) << "Calculated search spaces for column " << input_table_->GetColumnName(index);
+        LOG(DEBUG) << "Calculated search spaces for column "
+                   << input_table_->GetColumnName(non_empty_cols_[index]);
         auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now() - start_time);
         LOG(DEBUG) << "Current time: " << elapsed_milliseconds.count();
@@ -151,7 +153,7 @@ unsigned Split::ReduceDDs(auto const& start_time) {
 
         for (auto& df_y : dfs_y) {
             unsigned cnt = 0;
-            if (df_y[index] != min_max_dif_[index]) {
+            if (df_y != dfs_y.front()) {
                 switch (reduce_method_) {
                     case +Reduce::Negative:
                         reduced = NegativePruningReduce(df_y, search, cnt);
@@ -172,7 +174,7 @@ unsigned Split::ReduceDDs(auto const& start_time) {
         elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now() - start_time);
         LOG(INFO) << "Reduced dependencies with their rhs on column "
-                  << input_table_->GetColumnName(index);
+                  << input_table_->GetColumnName(non_empty_cols_[index]);
         LOG(DEBUG) << "Current time: " << elapsed_milliseconds.count();
     }
     return search_size;
@@ -235,6 +237,23 @@ unsigned Split::RemoveTransitiveDDs() {
         dd_collection_ = results_copy;
     }
     return num_cycles;
+}
+
+void Split::CalculateIndexSearchSpaces() {
+    std::vector<DFConstraint> new_min_max_dif;
+    std::vector<std::vector<std::vector<double>>> new_distances;
+    for (model::ColumnIndex index = 0; index < num_columns_; index++) {
+        std::vector<DFConstraint> cur_index_search_space = IndexSearchSpace(index);
+        if (cur_index_search_space.size() > 1) {
+            index_search_spaces_.push_back(std::move(cur_index_search_space));
+            non_empty_cols_.push_back(index);
+            new_min_max_dif.push_back(min_max_dif_[index]);
+            new_distances.push_back(std::move(distances_[index]));
+        }
+    }
+    num_columns_ = non_empty_cols_.size();
+    min_max_dif_ = std::move(new_min_max_dif);
+    distances_ = std::move(new_distances);
 }
 
 double Split::CalculateDistance(model::ColumnIndex column_index,
@@ -367,18 +386,16 @@ bool Split::IsFeasible(DF const& d) {
     return false;
 }
 
-std::vector<DF> Split::SearchSpace(model::ColumnIndex index) {
-    std::vector<DF> dfs;
-    DF d = min_max_dif_;
-    dfs.push_back(d);
+std::vector<DFConstraint> Split::IndexSearchSpace(model::ColumnIndex index) {
+    std::vector<DFConstraint> dfs;
+    dfs.push_back(min_max_dif_[index]);
 
     if (!has_dif_table_) {
         // differential functions should be put in this exact order for further reducing
         for (int i = num_dfs_per_column_ - 1; i >= 0; i--) {
             if (model::GreaterOrEqual(i, min_max_dif_[index].lower_bound) &&
                 model::Less(i, min_max_dif_[index].upper_bound)) {
-                d[index] = {min_max_dif_[index].lower_bound, (double)i};
-                dfs.push_back(d);
+                dfs.emplace_back(min_max_dif_[index].lower_bound, (double)i);
             }
         }
         return dfs;
@@ -443,16 +460,24 @@ std::vector<DF> Split::SearchSpace(model::ColumnIndex index) {
 
     // differential functions should be put in this exact order for further reducing
     for (auto limit : limits) {
-        d[index] = limit;
+        dfs.push_back(limit);
+    }
+    return dfs;
+}
+
+std::vector<DF> Split::SearchSpace(model::ColumnIndex index) {
+    DF d = min_max_dif_;
+    std::vector<DF> dfs;
+    for (auto const& df : index_search_spaces_[index]) {
+        d[index] = df;
         dfs.push_back(d);
     }
     return dfs;
 }
 
 std::vector<DF> Split::SearchSpace(std::vector<model::ColumnIndex>& indices) {
-    if (indices.size() == 1) return SearchSpace(*indices.begin());
-    model::ColumnIndex const last_index = *indices.rbegin();
-    std::vector<DF> const last_column_search_space = SearchSpace(last_index);
+    if (indices.size() == 1) return SearchSpace(indices.front());
+    std::vector<DF> const last_column_search_space = SearchSpace(indices.back());
     indices.pop_back();
     std::vector<DF> const previous_columns_search_space = SearchSpace(indices);
     std::vector<DF> merged_search_space;
@@ -694,14 +719,14 @@ model::DDString Split::DDToDDString(DD const& dd) const {
     model::DDString dd_string;
     for (model::ColumnIndex index = 0; index < num_columns_; index++) {
         if (dd.lhs[index] != min_max_dif_[index]) {
-            dd_string.left.emplace_back(input_table_->GetColumnName(index),
+            dd_string.left.emplace_back(input_table_->GetColumnName(non_empty_cols_[index]),
                                         dd.lhs[index].lower_bound, dd.lhs[index].upper_bound);
         }
     }
 
     for (model::ColumnIndex index = 0; index < num_columns_; index++) {
         if (dd.rhs[index] != min_max_dif_[index]) {
-            dd_string.right.emplace_back(input_table_->GetColumnName(index),
+            dd_string.right.emplace_back(input_table_->GetColumnName(non_empty_cols_[index]),
                                          dd.rhs[index].lower_bound, dd.rhs[index].upper_bound);
         }
     }
