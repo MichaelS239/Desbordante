@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "algorithms/algorithm.h"
 #include "algorithms/dd/dd.h"
+#include "algorithms/dd/dd_algorithm.h"
 #include "algorithms/dd/split/model/distance_position_list_index.h"
 #include "config/tabular_data/input_table_type.h"
 #include "enums.h"
@@ -23,10 +23,8 @@ using DF = model::DF;
 using DD = model::DD;
 using DFConstraint = model::DFConstraint;
 
-class Split : public Algorithm {
+class Split : public DDAlgorithm {
 private:
-    config::InputTable input_table_;
-
     std::shared_ptr<model::ColumnLayoutTypedRelationData> typed_relation_;
     unsigned num_rows_;
     model::ColumnIndex num_columns_;
@@ -46,15 +44,15 @@ private:
     std::vector<std::vector<std::vector<double>>> distances_;
     std::vector<std::pair<std::size_t, std::size_t>> tuple_pairs_;
     std::vector<std::vector<DFConstraint>> index_search_spaces_;
-    std::list<DD> dd_collection_;
+    std::list<DD> dd_list_;
 
     void RegisterOptions();
     void SetLimits();
     void CheckTypes();
     void ParseDifferenceTable();
 
-    void ResetState() final {
-        dd_collection_.clear();
+    void ResetDDAlgorithmState() override {
+        dd_list_.clear();
         tuple_pairs_.clear();
         non_empty_cols_.clear();
         index_search_spaces_.clear();
@@ -97,6 +95,7 @@ private:
     unsigned RemoveRedundantDDs();
     unsigned RemoveTransitiveDDs();
     model::DDString DDToDDString(DD const& dd) const;
+    void RegisterDDs();
     void PrintResults();
 
 protected:
@@ -108,7 +107,6 @@ public:
     Split();
     std::list<DD> const& GetDDs() const;
     std::vector<model::DFConstraint> const& GetMinMaxDif() const;
-    std::list<model::DDString> GetDDStringList() const;
 };
 
 }  // namespace algos::dd
