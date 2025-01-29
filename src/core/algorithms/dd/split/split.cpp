@@ -21,10 +21,10 @@
 #include "algorithms/dd/split/model/distance_position_list_index.h"
 #include "config/names_and_descriptions.h"
 #include "config/option_using.h"
-#include "config/tabular_data/input_table/option.h"
 #include "model/table/column_index.h"
-#include "model/types/numeric_type.h"
-#include "util/levenshtein_distance.h"
+#include "model/table/typed_column_data.h"
+#include "model/types/builtin.h"
+#include "model/types/imetrizable_type.h"
 
 namespace algos::dd {
 
