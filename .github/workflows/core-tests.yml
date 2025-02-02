@@ -15,6 +15,7 @@ on:
   push:
     branches:
       - main
+      - dd-infrastructure
     #paths-ignore:
       #- docs/**
       #- README.md
