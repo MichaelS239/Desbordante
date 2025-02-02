@@ -1,4 +1,4 @@
-#include "bind_split.h"
+#include "bind_dd.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -12,7 +12,7 @@ namespace py = pybind11;
 }  // namespace
 
 namespace python_bindings {
-void BindSplit(py::module_& main_module) {
+void BindDD(py::module_& main_module) {
     using namespace algos;
 
     auto dd_module = main_module.def_submodule("dd");
@@ -20,6 +20,7 @@ void BindSplit(py::module_& main_module) {
             .def("__str__", &model::DDString::ToString)
             .def("__repr__", &model::DDString::ToString);
 
-    BindPrimitiveNoBase<dd::Split>(dd_module, "Split").def("get_dds", &dd::Split::GetDDStringList);
+    BindPrimitive<dd::Split>(dd_module, &dd::DDAlgorithm::DDList, "DdAlgorithm", "get_dds",
+                             {"Split"});
 }
 }  // namespace python_bindings
