@@ -163,6 +163,9 @@ constexpr auto kDMinimumSharedValue =
 constexpr auto kDShardLength =
         "Number of rows each shard will cover when building PLI shards. Determines the "
         "segmentation of rows for parallel processing in the FastADC algorithm";
+// FastDD
+constexpr auto kDOperatorDifferenceTable =
+        "CSV table containing distance constraints (with operators <=, >=) for each column";
 // FastOD
 constexpr auto kDTimeLimitSeconds = "max running time of the algorithm. Pass 0 to remove limit";
 // GFD
