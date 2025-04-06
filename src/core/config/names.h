@@ -74,6 +74,8 @@ constexpr auto kComparableThreshold = "comparable_threshold";
 constexpr auto kEvidenceThreshold = "evidence_threshold";
 constexpr auto kMinimumSharedValue = "minimum_shared_value";
 constexpr auto kShardLength = "shard_length";
+// FastDD
+constexpr auto kOperatorDifferenceTable = "operator_difference_table";
 // FastOD
 constexpr auto kTimeLimitSeconds = "time_limit";
 // GFD
