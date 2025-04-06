@@ -11,8 +11,8 @@ using AlgorithmTypes =
                    EulerFD, Apriori, des::DES, metric::MetricVerifier, DataStats,
                    fd_verifier::FDVerifier, HyUCC, PyroUCC, HPIValid, cfd::FDFirstAlgorithm,
                    ACAlgorithm, UCCVerifier, Faida, Spider, Mind, INDVerifier, Fastod, GfdValidator,
-                   EGfdValidator, NaiveGfdValidator, order::Order, dd::Split, Cords, hymd::HyMD,
-                   PFDVerifier, cfd_verifier::CFDVerifier>;
+                   EGfdValidator, NaiveGfdValidator, order::Order, dd::Split, dd::FastDD, Cords,
+                   hymd::HyMD, PFDVerifier, cfd_verifier::CFDVerifier>;
 
 // clang-format off
 /* Enumeration of all supported non-pipeline algorithms. If you implement a new
@@ -84,8 +84,9 @@ BETTER_ENUM(AlgorithmType, char,
 /* Order dependency mining algorithms */
     order,
 
-/* Differential dependencies mining algorithm */
+/* Differential dependencies mining algorithms */
     split,
+    fastdd,
 
 /* SFD mining algorithm */
     cords,
