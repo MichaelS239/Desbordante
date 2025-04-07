@@ -6,6 +6,7 @@
 
 #include <easylogging++.h>
 
+#include "algorithms/dd/fastdd/util/differential_function_builder.h"
 #include "config/names_and_descriptions.h"
 #include "config/option_using.h"
 #include "config/tabular_data/input_table/option.h"
@@ -111,6 +112,9 @@ unsigned long long FastDD::ExecuteInternal() {
     SetLimits();
     CheckTypes();
     ParseDifferenceTable();
+
+    DifferentialFunctionBuilder df_builder(typed_relation_, num_rows_, num_columns_);
+    df_builder.BuildDFList(difference_typed_relation_);
 
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
