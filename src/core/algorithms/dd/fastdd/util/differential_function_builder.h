@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "algorithms/dd/fastdd/model/differential_function.h"
+#include "algorithms/dd/fastdd/providers/df_provider.h"
 #include "model/table/column_index.h"
 #include "model/table/column_layout_typed_relation_data.h"
 #include "model/table/typed_column_data.h"
@@ -14,6 +15,7 @@ namespace algos::dd {
 class DifferentialFunctionBuilder {
 private:
     std::list<DifferentialFunction> differential_functions_;
+    DFProvider df_provider_;
 
     std::shared_ptr<model::ColumnLayoutTypedRelationData> typed_relation_;
     unsigned num_rows_;

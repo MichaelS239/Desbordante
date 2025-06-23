@@ -20,6 +20,7 @@ private:
     std::shared_ptr<model::ColumnLayoutTypedRelationData> typed_relation_;
     unsigned num_rows_;
     model::ColumnIndex num_columns_;
+    unsigned shard_length_;
 
     std::vector<model::TypeId> type_ids_;
 

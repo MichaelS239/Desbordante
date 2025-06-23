@@ -6,6 +6,7 @@
 
 #include <easylogging++.h>
 
+#include "algorithms/dd/fastdd/model/pli_shard.h"
 #include "algorithms/dd/fastdd/util/differential_function_builder.h"
 #include "config/names_and_descriptions.h"
 #include "config/option_using.h"
@@ -29,12 +30,13 @@ void FastDD::RegisterOptions() {
                           kDOperatorDifferenceTable, default_table});
     RegisterOption(Option{&num_rows_, kNumRows, kDNumRows, 0U});
     RegisterOption(Option{&num_columns_, kNumColumns, kDNUmColumns, 0U});
+    RegisterOption(Option{&shard_length_, kShardLength, kDShardLength, 10000U});
 }
 
 void FastDD::MakeExecuteOptsAvailable() {
     using namespace config::names;
 
-    MakeOptionsAvailable({kOperatorDifferenceTable, kNumRows, kNumColumns});
+    MakeOptionsAvailable({kOperatorDifferenceTable, kNumRows, kNumColumns, kShardLength});
 }
 
 void FastDD::LoadDataInternal() {
@@ -107,7 +109,7 @@ void FastDD::ParseDifferenceTable() {
 
 unsigned long long FastDD::ExecuteInternal() {
     auto const start_time = std::chrono::system_clock::now();
-    LOG(DEBUG) << "Start";
+    LOG(INFO) << "Start";
 
     SetLimits();
     CheckTypes();
@@ -115,10 +117,19 @@ unsigned long long FastDD::ExecuteInternal() {
 
     DifferentialFunctionBuilder df_builder(typed_relation_, num_rows_, num_columns_);
     df_builder.BuildDFList(difference_typed_relation_);
+    LOG(INFO) << "Built DF set";
+    PliShardBuilder pli_shard_builder(shard_length_);
+    std::vector<PliShard> pli_shards =
+            pli_shard_builder.BuildPliShards(typed_relation_->GetColumnData());
+    LOG(INFO) << "Built PLIs";
+    LOG(INFO) << pli_shards.size();
+    for (std::size_t i = 0; i != pli_shards.size(); ++i) {
+        LOG(INFO) << pli_shards[i].ToString();
+    }
 
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
-    LOG(DEBUG) << "Algorithm time: " << elapsed_milliseconds.count();
+    LOG(INFO) << "Algorithm time: " << elapsed_milliseconds.count();
     return elapsed_milliseconds.count();
 }
 
