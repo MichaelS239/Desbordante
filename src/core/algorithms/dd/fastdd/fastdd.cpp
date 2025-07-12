@@ -3,11 +3,14 @@
 #include <chrono>
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 
 #include <easylogging++.h>
 
 #include "algorithms/dd/fastdd/model/pli_shard.h"
+#include "algorithms/dd/fastdd/util/diff_set_builder.h"
 #include "algorithms/dd/fastdd/util/differential_function_builder.h"
+#include "algorithms/dd/fastdd/util/distance_calculator.h"
 #include "config/names_and_descriptions.h"
 #include "config/option_using.h"
 #include "config/tabular_data/input_table/option.h"
@@ -115,17 +118,30 @@ unsigned long long FastDD::ExecuteInternal() {
     CheckTypes();
     ParseDifferenceTable();
 
-    DifferentialFunctionBuilder df_builder(typed_relation_, num_rows_, num_columns_);
+    std::shared_ptr<DistanceCalculator> distance_calculator =
+            std::make_shared<DistanceCalculator>(typed_relation_);
+    DifferentialFunctionBuilder df_builder(typed_relation_, num_rows_, num_columns_,
+                                           distance_calculator);
     df_builder.BuildDFList(difference_typed_relation_);
     LOG(INFO) << "Built DF set";
     PliShardBuilder pli_shard_builder(shard_length_);
     std::vector<PliShard> pli_shards =
             pli_shard_builder.BuildPliShards(typed_relation_->GetColumnData());
     LOG(INFO) << "Built PLIs";
-    LOG(INFO) << pli_shards.size();
-    for (std::size_t i = 0; i != pli_shards.size(); ++i) {
+    LOG(INFO) << "Number of PLI shards: " << pli_shards.size();
+    /*for (std::size_t i = 0; i != pli_shards.size(); ++i) {
         LOG(INFO) << pli_shards[i].ToString();
-    }
+    }*/
+    DiffSetBuilder diff_set_builder(df_builder, distance_calculator);
+    diff_set_builder.BuildDiffSet(std::move(pli_shards));
+    DiffSet diff_set = diff_set_builder.GetDiffSet();
+    LOG(INFO) << "Built Diff-Set";
+    std::vector<MatchDF> match_dfs = diff_set.GetMatchDFs();
+    LOG(INFO) << "Diff-Set size: " << match_dfs.size();
+    /*for (auto const& match_df : match_dfs) {
+        boost::dynamic_bitset<> bitset = match_df.GetBitset();
+        LOG(INFO) << bitset;
+    }*/
 
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);

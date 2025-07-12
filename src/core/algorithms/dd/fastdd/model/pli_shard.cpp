@@ -142,9 +142,10 @@ std::vector<PliShard> PliShardBuilder::BuildPliShards(
         plis.reserve(cols_num);
 
         for (model::ColumnIndex col = 0; col < cols_num; col++) {
-            // model::Type t = input[col].GetType();
             if (!hashed_input[col].empty()) {
-                Pli pli = BuildPli(hashed_input[col], input[col].IsNumeric(), shard_beg, shard_end);
+                Pli pli = BuildPli(hashed_input[col],
+                                   model::Type::IsDistanceOrdered(input[col].GetTypeId()),
+                                   shard_beg, shard_end);
                 plis.push_back(std::move(pli));
             }
         }
@@ -155,12 +156,12 @@ std::vector<PliShard> PliShardBuilder::BuildPliShards(
     return pli_shards;
 }
 
-Pli PliShardBuilder::BuildPli(std::vector<std::size_t> const& col_values, bool is_num,
+Pli PliShardBuilder::BuildPli(std::vector<std::size_t> const& col_values, bool is_distance_ordered,
                               std::size_t beg, std::size_t end) {
     std::unordered_set<std::size_t> unique_keys(col_values.begin() + beg, col_values.begin() + end);
     std::vector<std::size_t> keys(unique_keys.begin(), unique_keys.end());
 
-    if (is_num) {
+    if (is_distance_ordered) {
         std::sort(keys.begin(), keys.end(), std::greater<std::size_t>());
     }
 

@@ -118,8 +118,8 @@ private:
     std::vector<IndexProvider<std::byte const*, model::Type::Hasher, model::Type::Equal>>
             providers_;
 
-    Pli BuildPli(std::vector<std::size_t> const& col_values, bool is_num, std::size_t beg,
-                 std::size_t end);
+    Pli BuildPli(std::vector<std::size_t> const& col_values, bool is_distance_ordered,
+                 std::size_t beg, std::size_t end);
     std::vector<std::size_t> ColumnToHash(model::TypedColumnData const& column,
                                           model::ColumnIndex column_index);
     void AddTableToHashAndSortProviders(std::vector<model::TypedColumnData> const& input);
