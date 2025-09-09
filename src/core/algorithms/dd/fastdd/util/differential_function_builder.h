@@ -59,6 +59,10 @@ public:
         return thresholds_[column_index];
     }
 
+    std::vector<std::vector<DifferentialFunction>> GetDifFuncs() const noexcept {
+        return differential_functions_;
+    }
+
     model::ColumnIndex GetNumColumns() const noexcept {
         return num_columns_;
     }

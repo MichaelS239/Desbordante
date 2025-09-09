@@ -32,7 +32,7 @@ void FastDD::RegisterOptions() {
     RegisterOption(Option{&operator_difference_table_, kOperatorDifferenceTable,
                           kDOperatorDifferenceTable, default_table});
     RegisterOption(Option{&num_rows_, kNumRows, kDNumRows, 0U});
-    RegisterOption(Option{&num_columns_, kNumColumns, kDNUmColumns, 0U});
+    RegisterOption(Option{&num_columns_, kNumColumns, kDNumColumns, 0U});
     RegisterOption(Option{&shard_length_, kShardLength, kDShardLength, 10000U});
 }
 
