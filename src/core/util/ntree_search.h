@@ -6,7 +6,7 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-namespace algos::fastadc {
+namespace util {
 
 /**
  * A trie-like structure (prefix tree) for storing bitsets and checking
@@ -64,4 +64,4 @@ private:
     }
 };
 
-}  // namespace algos::fastadc
+}  // namespace util

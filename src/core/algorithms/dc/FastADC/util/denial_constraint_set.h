@@ -2,7 +2,7 @@
 
 #include "core/algorithms/dc/FastADC/model/denial_constraint.h"
 #include "core/algorithms/dc/FastADC/util/closure.h"
-#include "core/algorithms/dc/FastADC/util/ntree_search.h"
+#include "core/util/ntree_search.h"
 
 namespace algos::fastadc {
 
@@ -155,7 +155,7 @@ public:
         std::sort(constraints_vector.begin(), constraints_vector.end(), Comparator());
 
         // Process minimized constraints
-        NTreeSearch tree;
+        util::NTreeSearch tree;
         for (auto const& [closure_set, candidate] : constraints_vector) {
             if (tree.ContainsSubset(closure_set.GetBitset())) {
                 continue;
