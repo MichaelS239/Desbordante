@@ -1,5 +1,6 @@
 #include "algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
 
+#include <unordered_set>
 #include <utility>
 
 #include "algorithms/dd/fastdd/util/evidence_inverter.h"
@@ -19,14 +20,18 @@ HybridEvidenceInverter::HybridEvidenceInverter(std::vector<MatchDF> match_dfs,
     }
     dif_func_num_ = dif_func_nums_[dif_func_nums_.size() - 1];
     dif_func_to_node_id.reserve(dif_func_num_);
+    column_to_dif_funcs_.reserve(dif_funcs_.size());
     for (std::size_t i = 0; i != dif_funcs_.size(); ++i) {
+        boost::dynamic_bitset<> cur_column_bitset(dif_func_num_);
         for (std::size_t j = 0; j != dif_funcs_[i].size(); ++j) {
             if (dif_funcs_[i][j].GetOperator() == Operator::kLessOrEqual) {
                 dif_func_to_node_id.push_back(dif_func_nums_[i] + j);
             } else {
                 dif_func_to_node_id.push_back(dif_func_nums_[i] + j + dif_func_num_);
             }
+            cur_column_bitset.set(dif_func_nums_[i] + j);
         }
+        column_to_dif_funcs_.push_back(std::move(cur_column_bitset));
     }
 }
 
@@ -69,8 +74,10 @@ std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
                 cur_diff_bitsets.push_back(std::move(diff_bitset));
             }
 
-            EvidenceInverter inverter(std::move(cur_diff_bitsets), dif_func_num_);
-            std::vector<boost::dynamic_bitset<>> covers = inverter.GetCovers();
+            EvidenceInverter inverter(std::move(cur_diff_bitsets), dif_func_num_,
+                                      column_to_dif_funcs_, i);
+            std::unordered_set<boost::dynamic_bitset<>> covers_set = inverter.GetCovers();
+            std::vector<boost::dynamic_bitset<>> covers(covers_set.begin(), covers_set.end());
             std::vector<DifferentialDependency> minimized_covers = Minimize(std::move(covers));
             std::move(minimized_covers.begin(), minimized_covers.end(), std::back_inserter(result));
         }
