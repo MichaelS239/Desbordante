@@ -1,4 +1,4 @@
-#include "algorithms/dd/fastdd/util/translating_tree_search.h"
+#include "algorithms/dd/fastdd/trees/translating_tree_search.h"
 
 #include <algorithm>
 #include <numeric>

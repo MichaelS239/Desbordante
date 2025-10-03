@@ -2,7 +2,8 @@
 
 #include <utility>
 
-#include "algorithms/dd/fastdd/util/translating_tree_search.h"
+#include "algorithms/dd/fastdd/trees/translating_tree_search.h"
+#include "algorithms/dd/fastdd/trees/tree_search.h"
 
 namespace algos::dd {
 
@@ -42,6 +43,23 @@ std::unordered_set<boost::dynamic_bitset<>> EvidenceInverter::GetCovers() const 
 }
 
 std::vector<boost::dynamic_bitset<>> EvidenceInverter::MinimizeDifferentialSet(
-        std::vector<boost::dynamic_bitset<>> bitsets) const {}
+        std::vector<boost::dynamic_bitset<>> bitsets) const {
+    std::sort(bitsets.begin(), bitsets.end(),
+              [](boost::dynamic_bitset<> const& a, boost::dynamic_bitset<> const& b) {
+                  int diff = b.count() - a.count();
+                  return diff != 0 ? diff : b < a;
+              });
+
+    TreeSearch negative_search;
+    std::for_each(bitsets.begin(), bitsets.end(),
+                  [&negative_search](boost::dynamic_bitset<> const& bitset) {
+                      if (!negative_search.FindSuperSet(bitset)) {
+                          negative_search.Add(bitset);
+                      }
+                  });
+    std::vector<boost::dynamic_bitset<>> remaining_bitsets(negative_search.begin(),
+                                                           negative_search.end());
+    return remaining_bitsets;
+}
 
 }  // namespace algos::dd
