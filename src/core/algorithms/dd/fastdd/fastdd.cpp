@@ -11,6 +11,7 @@
 #include "algorithms/dd/fastdd/util/diff_set_builder.h"
 #include "algorithms/dd/fastdd/util/differential_function_builder.h"
 #include "algorithms/dd/fastdd/util/distance_calculator.h"
+#include "algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
 #include "config/names_and_descriptions.h"
 #include "config/option_using.h"
 #include "config/tabular_data/input_table/option.h"
@@ -142,6 +143,12 @@ unsigned long long FastDD::ExecuteInternal() {
         boost::dynamic_bitset<> bitset = match_df.GetBitset();
         LOG(INFO) << bitset;
     }*/
+    HybridEvidenceInverter hybrid_evidence_inverter(std::move(match_dfs), df_builder);
+    std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
+    LOG(INFO) << "Built DDs: " << dds.size();
+    for (auto const& dd : dds) {
+        LOG(INFO) << dd.ToString();
+    }
 
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
