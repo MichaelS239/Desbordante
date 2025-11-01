@@ -18,9 +18,10 @@ public:
     BitsetTranslator(std::vector<std::size_t> indices) : indices_(std::move(indices)) {}
 
     boost::dynamic_bitset<> Transform(boost::dynamic_bitset<> const& bitset) const {
-        boost::dynamic_bitset<> transformed_bitset(bitset.size());
+        std::size_t const bitset_size = bitset.size();
+        boost::dynamic_bitset<> transformed_bitset(bitset_size);
         for (std::size_t i = 0; i != indices_.size(); ++i) {
-            if (bitset[indices_[i]]) {
+            if (indices_[i] < bitset_size && bitset[indices_[i]]) {
                 transformed_bitset.set(i);
             }
         }

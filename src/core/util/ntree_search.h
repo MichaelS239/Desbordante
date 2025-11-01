@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <boost/dynamic_bitset.hpp>
+#include <easylogging++.h>
 
 namespace util {
 
@@ -73,7 +74,7 @@ private:
             next_bit = bs.find_next(next_bit);
         }
 
-        return !children_.empty();
+        return children_.empty();
     }
 
 public:
@@ -85,30 +86,41 @@ public:
         using reference = value_type const&;
 
         Iterator(NTreeSearch* root, bool is_end = false) : traversal_() {
-            if (!is_end) {
-                traversal_.emplace(root, root->children_.begin());
+            if (!is_end && (!root->children_.empty() || root->stored_bitset_)) {
+                traversal_.emplace(root, root->children_.cbegin());
                 FindNext(/*{root, root->children_.begin()}*/);
             }
         }
 
         reference operator*() const {
             Node cur_node = traversal_.top();
+            // LOG(INFO) << "Retrieve: " << cur_node.first->stored_bitset_.value();
             return cur_node.first->stored_bitset_.value();
         }
 
         Iterator& operator++() {
             Node cur_node = traversal_.top();
-            while (cur_node.second == cur_node.first->children_.end()) {
+            auto cur_it_copy = cur_node.second;
+            while (cur_node.second == cur_node.first->children_.cend() ||
+                   ++cur_it_copy == cur_node.first->children_.cend()) {
+                cur_it_copy = cur_node.second;
+                // LOG(INFO) << "...";
+                if (cur_it_copy != cur_node.first->children_.cend() &&
+                    ++cur_it_copy == cur_node.first->children_.cend() &&
+                    cur_node.first->stored_bitset_) {
+                    ++traversal_.top().second;
+                    return *this;
+                }
                 traversal_.pop();
                 if (traversal_.empty()) {
-                    break;
+                    return *this;
                 }
                 cur_node = traversal_.top();
+                cur_it_copy = cur_node.second;
             }
-            if (!traversal_.empty()) {
-                ++traversal_.top().second;
-                FindNext();
-            }
+
+            ++traversal_.top().second;
+            FindNext();
 
             return *this;
         }
@@ -129,9 +141,9 @@ public:
         }
 
     private:
-        using Node =
-                std::pair<NTreeSearch*,
-                          std::unordered_map<std::size_t, std::unique_ptr<NTreeSearch>>::iterator>;
+        using Node = std::pair<
+                NTreeSearch*,
+                std::unordered_map<std::size_t, std::unique_ptr<NTreeSearch>>::const_iterator>;
 
         void FindNext(/*Node cur_node*/) {
             /*if (cur_node.first->stored_bitset_) {
@@ -145,14 +157,26 @@ public:
                 }
                 traversal_.pop();
             }*/
+            // LOG(INFO) << "FindNext";
 
             while (!traversal_.empty()) {
+                // LOG(INFO) << "Go";
                 Node cur_node = traversal_.top();
-                if (cur_node.first->stored_bitset_) {
+                if (cur_node.first->children_.empty()) {
+                    // LOG(INFO) << "Found";
                     return;
                 }
-                NTreeSearch* child = cur_node.second->second.get();
-                traversal_.emplace(child, child->children_.begin());
+                // LOG(INFO) << "False";
+                NTreeSearch* child = (cur_node.second)->second.get();
+                // LOG(INFO) << "Child";
+                /*if (child->children_.empty()) {
+                    LOG(INFO) << "EMPTY!!!!!!!!";
+                }
+                if (child->stored_bitset_) {
+                    LOG(INFO) << "STORED BITSET!!!!!!";
+                }*/
+                traversal_.emplace(child, child->children_.cbegin());
+                // LOG(INFO) << "Emplace";
             }
         }
 

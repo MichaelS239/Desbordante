@@ -4,6 +4,8 @@
 #include <numeric>
 #include <utility>
 
+#include <easylogging++.h>
+
 namespace algos::dd {
 
 TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities,
@@ -14,7 +16,7 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
         return priorities[i] > priorities[j];
     });
 
-    translator_ = BitsetTranslator(std::move(priorities));
+    translator_ = BitsetTranslator(std::move(indices));
     transformed_bitsets_ = std::vector<boost::dynamic_bitset<>>(bitsets.size());
     BitsetTranslator const& translator = translator_;
     std::transform(bitsets.begin(), bitsets.end(), transformed_bitsets_.begin(),
@@ -25,10 +27,13 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
 
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
     boost::dynamic_bitset<> transformed_invalid_bitset = translator_.Transform(invalid_bitset);
+    // LOG(INFO) << "Transformed";
     std::vector<boost::dynamic_bitset<>> removed =
             tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    // LOG(INFO) << "Removed generalizations: " << removed.size();
 
     for (std::size_t i = 0; i != removed.size(); ++i) {
+        // LOG(INFO) << "Remove: " << removed[i];
         for (std::size_t j = 0; j != transformed_bitsets_.size(); ++j) {
             boost::dynamic_bitset<> cur_bitset = removed[i];
             cur_bitset &= transformed_bitsets_[j];
@@ -41,7 +46,9 @@ void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid
                      index = valid_bitset.find_next(index)) {
                     boost::dynamic_bitset<> bitset_to_add = removed[i];
                     bitset_to_add.set(index);
+                    // LOG(INFO) << "Contains";
                     if (!tree_.ContainsSubset(bitset_to_add)) {
+                        // LOG(INFO) << "Insert: " << bitset_to_add;
                         tree_.Insert(bitset_to_add);
                     }
                 }
