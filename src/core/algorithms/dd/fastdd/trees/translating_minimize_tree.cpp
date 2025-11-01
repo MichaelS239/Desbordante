@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <unordered_set>
 
+#include <easylogging++.h>
+
 namespace algos::dd {
 
 std::vector<std::size_t> TranslatingMinimizeTree::TransformToNodes(
@@ -49,16 +51,27 @@ boost::dynamic_bitset<> TranslatingMinimizeTree::TransformToBitset(
 
 std::unordered_set<boost::dynamic_bitset<>> TranslatingMinimizeTree::Minimize(
         std::vector<boost::dynamic_bitset<>> candidates) {
+    /*for (auto bitset : candidates) {
+        LOG(INFO) << bitset;
+    }*/
     std::sort(candidates.begin(), candidates.end(),
               [](boost::dynamic_bitset<> const& a, boost::dynamic_bitset<> const& b) {
                   if (a.count() == b.count()) {
-                      return b < a;
+                      return a < b;
                   }
                   return a.count() < b.count();
               });
-
+    /*LOG(INFO) << "Sorted candidates:";
+    for (std::size_t i = 0; i != std::min(10UL, candidates.size()); ++i) {
+        LOG(INFO) << candidates[i];
+    }
+    LOG(INFO) << "Transformed candidates:";
+    for (std::size_t i = 0; i != std::min(10UL, candidates.size()); ++i) {
+        LOG(INFO) << TransformToBitset(candidates[i]);
+    }*/
     std::unordered_set<boost::dynamic_bitset<>> result;
     for (auto const& candidate : candidates) {
+        // LOG(INFO) << TransformToBitset(candidate);
         std::optional<boost::dynamic_bitset<>> superset =
                 tree_.Add(TransformToBitset(candidate), TransformToNodes(candidate));
         if (!superset) {
