@@ -7,6 +7,7 @@
 #include <utility>
 
 #include <boost/dynamic_bitset.hpp>
+#include <easylogging++.h>
 
 namespace algos::dd {
 
@@ -32,7 +33,9 @@ public:
     Node() = default;
 
     Node(boost::dynamic_bitset<> const& bitset, NodeType node_type = NodeType::LeafNode)
-        : bitset_(bitset) {}
+        : bitset_(bitset), node_type_(node_type) {
+        // LOG(INFO) << "LeafConstructor";
+    }
 
     Node(std::size_t bit, std::unique_ptr<Node> left_child, std::unique_ptr<Node> right_child,
          boost::dynamic_bitset<> const& union_bitset,
@@ -41,7 +44,10 @@ public:
           left_child_(std::move(left_child)),
           right_child_(std::move(right_child)),
           union_(union_bitset),
-          intersect_(intersect_bitset) {}
+          intersect_(intersect_bitset),
+          node_type_(node_type) {
+        // LOG(INFO) << "InnerConstructor";
+    }
 
     Node(std::size_t bit, std::unique_ptr<Node> left_child, std::unique_ptr<Node> right_child,
          NodeType node_type = NodeType::InnerNode)
@@ -94,15 +100,24 @@ public:
     std::optional<boost::dynamic_bitset<>> FindSuperSet(
             boost::dynamic_bitset<> const& bitset) const {
         if (node_type_ == NodeType::EmptyNode) {
+            // LOG(INFO) << "EmptyFind";
             return std::nullopt;
         }
         if (node_type_ == NodeType::LeafNode) {
+            /*LOG(INFO) << "LeafFind: " << bitset_.has_value() << " " << bitset_.value().size() << "
+               "
+                      << bitset.size();*/
             return bitset.is_subset_of(bitset_.value()) ? bitset_ : std::nullopt;
         }
-
+        // LOG(INFO) << "InnerFind";
         if (bitset.is_subset_of(union_.value())) {
+            // LOG(INFO) << "LeftChild";
             std::optional<boost::dynamic_bitset<>> superset = left_child_->FindSuperSet(bitset);
-            return superset ? right_child_->FindSuperSet(bitset) : superset;
+            // LOG(INFO) << "RightChild?";
+            /*if (!right_child_) {
+                LOG(INFO) << "RIGHT_CHILD EMPTY!!!!!!!!";
+            }*/
+            return superset ? superset : right_child_->FindSuperSet(bitset);
         }
 
         return std::nullopt;

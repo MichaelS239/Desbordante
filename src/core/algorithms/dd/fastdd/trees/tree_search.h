@@ -6,6 +6,7 @@
 #include <utility>
 
 #include <boost/dynamic_bitset.hpp>
+#include <easylogging++.h>
 
 #include "algorithms/dd/fastdd/trees/node.h"
 
@@ -17,14 +18,13 @@ private:
 
 public:
     void Add(boost::dynamic_bitset<> const& bitset) {
-        std::unique_ptr<Node> new_root = root_->Add(std::move(root_), bitset, 0);
-        root_ = std::move(new_root);
+        root_ = root_->Add(std::move(root_), bitset, 0);
+        // LOG(INFO) << (root_->node_type_ == Node::NodeType::EmptyNode);
     }
 
     // is this needed?
     void Remove(boost::dynamic_bitset<> const& bitset) {
-        std::unique_ptr<Node> new_root = root_->Remove(std::move(root_), bitset);
-        root_ = std::move(new_root);
+        root_ = root_->Remove(std::move(root_), bitset);
     }
 
     std::optional<boost::dynamic_bitset<>> FindSuperSet(
@@ -53,7 +53,8 @@ public:
 
         Iterator& operator++() {
             StackNode cur_node = traversal_.top();
-            while (cur_node.is_right_child) {
+            while (cur_node.node->node_type_ == Node::NodeType::LeafNode ||
+                   cur_node.is_right_child) {
                 traversal_.pop();
                 if (traversal_.empty()) {
                     break;
