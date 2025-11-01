@@ -3,6 +3,8 @@
 #include <unordered_set>
 #include <utility>
 
+#include <easylogging++.h>
+
 #include "algorithms/dd/fastdd/trees/translating_minimize_tree.h"
 #include "algorithms/dd/fastdd/util/evidence_inverter.h"
 
@@ -71,13 +73,17 @@ void HybridEvidenceInverter::BuildClueIndices() {
 
 std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
     BuildClueIndices();
+    LOG(INFO) << "Built clue indices";
 
     std::vector<DifferentialDependency> result;
 
     for (std::size_t i = 0; i != dif_funcs_.size(); ++i) {
-        for (std::size_t j = 0; j != dif_funcs_[i].size(); ++j) {
+        for (std::size_t j = dif_funcs_[i].size(); j != 0; --j) {
             boost::dynamic_bitset<> cur_bitset =
-                    dif_func_to_not_satisfied_bitsets_[dif_func_info_->dif_func_nums_[i] + j];
+                    dif_func_to_not_satisfied_bitsets_[dif_func_info_->dif_func_nums_[i] + j - 1];
+            if (cur_bitset.none()) {
+                continue;
+            }
             std::vector<boost::dynamic_bitset<>> cur_diff_bitsets;
             for (std::size_t index = cur_bitset.find_first();
                  index != boost::dynamic_bitset<>::npos; index = cur_bitset.find_next(index)) {
@@ -88,13 +94,17 @@ std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
                 }
                 cur_diff_bitsets.push_back(std::move(diff_bitset));
             }
+            // LOG(INFO) << "Col " << i << "; Dif_func " << j - 1;
 
             EvidenceInverter inverter(std::move(cur_diff_bitsets), dif_func_info_->dif_func_num_,
                                       column_to_dif_funcs_, i);
+            // LOG(INFO) << "Built inverter";
             std::unordered_set<boost::dynamic_bitset<>> covers_set = inverter.GetCovers();
             std::vector<boost::dynamic_bitset<>> covers(covers_set.begin(), covers_set.end());
+            // LOG(INFO) << "Got covers: " << covers.size();
             std::vector<DifferentialDependency> minimized_covers =
-                    Minimize(std::move(covers), i, j);
+                    Minimize(std::move(covers), i, j - 1);
+            // LOG(INFO) << "Minimized covers: " << minimized_covers.size();
             std::move(minimized_covers.begin(), minimized_covers.end(), std::back_inserter(result));
         }
     }
@@ -133,6 +143,7 @@ std::vector<DifferentialDependency> HybridEvidenceInverter::Minimize(
 
         DifferentialFunction rhs = dif_funcs_[rhs_column][rhs_offset];
         minimized_dds.emplace_back(std::move(lhs), std::move(rhs));
+        // LOG(INFO) << minimized_dds[minimized_dds.size() - 1].ToString();
     }
 
     return minimized_dds;

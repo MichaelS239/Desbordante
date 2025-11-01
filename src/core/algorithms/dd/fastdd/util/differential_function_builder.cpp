@@ -227,12 +227,12 @@ void DifferentialFunctionBuilder::AddThresholds(std::vector<double> const& less_
     differential_functions_[column_index].reserve(less_thresholds.size() +
                                                   greater_thresholds.size());
     Column const* column = typed_relation_->GetColumnData(column_index).GetColumn();
-    for (auto threshold_it = less_thresholds.begin(); threshold_it != less_thresholds.end();
+    for (auto threshold_it = less_thresholds.rbegin(); threshold_it != less_thresholds.rend();
          ++threshold_it) {
         differential_functions_[column_index].push_back(df_provider_.GetDifferentialFunction(
                 Operator::kLessOrEqual, column, *threshold_it));
     }
-    for (auto threshold_it = greater_thresholds.rbegin(); threshold_it != greater_thresholds.rend();
+    for (auto threshold_it = greater_thresholds.begin(); threshold_it != greater_thresholds.end();
          ++threshold_it) {
         differential_functions_[column_index].push_back(df_provider_.GetDifferentialFunction(
                 Operator::kGreaterOrEqual, column, *threshold_it));

@@ -144,6 +144,7 @@ unsigned long long FastDD::ExecuteInternal() {
         LOG(INFO) << bitset;
     }*/
     HybridEvidenceInverter hybrid_evidence_inverter(std::move(match_dfs), df_builder);
+    LOG(INFO) << "Built Inverter";
     std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
     LOG(INFO) << "Built DDs: " << dds.size();
     for (auto const& dd : dds) {
