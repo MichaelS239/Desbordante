@@ -21,7 +21,7 @@ std::pair<std::vector<double>, std::vector<double>> DifferentialFunctionBuilder:
         model::TypedColumnData const& dif_column, model::ColumnIndex const column_index) const {
     std::size_t dif_num_rows = dif_column.GetNumRows();
 
-    boost::regex df_regex(R"((>=|<=) (.*)$)");
+    boost::regex df_regex(R"((>|<=) (.*)$)");
     boost::regex double_regex(
             R"(^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$|)"
             R"(^[+-]?(?i)(inf|nan)(?-i)$|)"
@@ -234,8 +234,8 @@ void DifferentialFunctionBuilder::AddThresholds(std::vector<double> const& less_
     }
     for (auto threshold_it = greater_thresholds.begin(); threshold_it != greater_thresholds.end();
          ++threshold_it) {
-        differential_functions_[column_index].push_back(df_provider_.GetDifferentialFunction(
-                Operator::kGreaterOrEqual, column, *threshold_it));
+        differential_functions_[column_index].push_back(
+                df_provider_.GetDifferentialFunction(Operator::kGreater, column, *threshold_it));
     }
 }
 
@@ -305,8 +305,8 @@ std::vector<boost::dynamic_bitset<>> DifferentialFunctionBuilder::GetSatisfiedDF
             if (dif_func.GetOperator() == Operator::kLessOrEqual &&
                 model::LessOrEqual(threshold, dif_func.GetThreshold())) {
                 cur_bitset.set(index);
-            } else if (dif_func.GetOperator() == Operator::kGreaterOrEqual &&
-                       model::GreaterOrEqual(threshold, dif_func.GetThreshold())) {
+            } else if (dif_func.GetOperator() == Operator::kGreater &&
+                       model::Greater(threshold, dif_func.GetThreshold())) {
                 cur_bitset.set(index);
             }
         }
@@ -317,7 +317,7 @@ std::vector<boost::dynamic_bitset<>> DifferentialFunctionBuilder::GetSatisfiedDF
         DifferentialFunction const& dif_func = differential_functions_[column_index][i];
         // std::size_t const index = df_index_provider_.GetIndex(dif_func);
         std::size_t const index = dif_func_nums_[column_index] + i;
-        if (dif_func.GetOperator() == Operator::kGreaterOrEqual) {
+        if (dif_func.GetOperator() == Operator::kGreater) {
             last_bitset.set(index);
         }
     }

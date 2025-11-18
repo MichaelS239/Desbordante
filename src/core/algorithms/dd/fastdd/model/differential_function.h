@@ -30,9 +30,8 @@ public:
     }
 
     std::string ToString() const {
-        return "[ " + column_->GetName() + " " +
-               (operator_ == Operator::kGreaterOrEqual ? ">=" : "<=") + std::to_string(threshold_) +
-               " ]";
+        return "[ " + column_->GetName() + " " + (operator_ == Operator::kGreater ? ">" : "<=") +
+               std::to_string(threshold_) + " ]";
     }
 };
 
