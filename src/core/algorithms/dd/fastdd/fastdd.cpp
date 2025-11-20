@@ -130,6 +130,9 @@ unsigned long long FastDD::ExecuteInternal() {
             pli_shard_builder.BuildPliShards(typed_relation_->GetColumnData());
     LOG(INFO) << "Built PLIs";
     LOG(INFO) << "Number of PLI shards: " << pli_shards.size();
+    auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - start_time);
+    LOG(INFO) << "Current time: " << elapsed_milliseconds.count();
     /*for (std::size_t i = 0; i != pli_shards.size(); ++i) {
         LOG(INFO) << pli_shards[i].ToString();
     }*/
@@ -139,6 +142,9 @@ unsigned long long FastDD::ExecuteInternal() {
     LOG(INFO) << "Built Diff-Set";
     std::vector<MatchDF> match_dfs = diff_set.GetMatchDFs();
     LOG(INFO) << "Diff-Set size: " << match_dfs.size();
+    elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now() - start_time);
+    LOG(INFO) << "Current time: " << elapsed_milliseconds.count();
     /*for (auto const& match_df : match_dfs) {
         boost::dynamic_bitset<> bitset = match_df.GetBitset();
         LOG(INFO) << bitset;
@@ -147,11 +153,13 @@ unsigned long long FastDD::ExecuteInternal() {
     LOG(INFO) << "Built Inverter";
     std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
     LOG(INFO) << "Built DDs: " << dds.size();
-    for (auto const& dd : dds) {
-        LOG(INFO) << dd.ToString();
+    if (dds.size() <= 100) {
+        for (auto const& dd : dds) {
+            LOG(INFO) << dd.ToString();
+        }
     }
 
-    auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
+    elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
     LOG(INFO) << "Algorithm time: " << elapsed_milliseconds.count();
     return elapsed_milliseconds.count();
