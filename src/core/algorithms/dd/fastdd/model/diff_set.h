@@ -17,8 +17,8 @@ private:
     std::vector<MatchDF> match_dfs_;
 
     std::vector<std::vector<boost::dynamic_bitset<>>> offset_to_predicates_;
-    std::size_t const bitset_size_;
     std::shared_ptr<ISNInfo> isn_info_;
+    std::size_t const bitset_size_;
 
 public:
     DiffSet(DifferentialFunctionBuilder const& df_builder, std::shared_ptr<ISNInfo> isn_info)
