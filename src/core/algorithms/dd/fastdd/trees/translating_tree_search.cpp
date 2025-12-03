@@ -23,6 +23,11 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
                    [&translator](boost::dynamic_bitset<> const& bitset) {
                        return translator.Transform(bitset);
                    });
+    /*for (std::size_t i = 0; i != bitsets.size(); ++i) {
+        LOG(INFO) << transformed_bitsets_[i];
+    }*/
+    tree_ = util::NTreeSearch();
+    // util::NTreeSearch::count = 0;
 }
 
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
@@ -30,7 +35,11 @@ void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid
     // LOG(INFO) << "Transformed";
     std::vector<boost::dynamic_bitset<>> removed =
             tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    //++count;
     // LOG(INFO) << "Removed generalizations: " << removed.size();
+    /*if (count < 50) {
+        LOG(INFO) << transformed_invalid_bitset;
+    }*/
 
     for (std::size_t i = 0; i != removed.size(); ++i) {
         // LOG(INFO) << "Remove: " << removed[i];
@@ -47,6 +56,7 @@ void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid
                     boost::dynamic_bitset<> bitset_to_add = removed[i];
                     bitset_to_add.set(index);
                     // LOG(INFO) << "Contains";
+                    //++count;
                     if (!tree_.ContainsSubset(bitset_to_add)) {
                         // LOG(INFO) << "Insert: " << bitset_to_add;
                         tree_.Insert(bitset_to_add);

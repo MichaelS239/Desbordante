@@ -26,6 +26,7 @@ private:
     std::vector<boost::dynamic_bitset<>> dif_func_to_not_satisfied_bitsets_;
 
     std::unordered_map<std::size_t, std::shared_ptr<TranslatingMinimizeTree>> minimize_tree_map_;
+    // std::size_t count = 0;
 
     void BuildClueIndices();
     std::vector<DifferentialDependency> Minimize(std::vector<boost::dynamic_bitset<>> covers,
@@ -36,6 +37,10 @@ public:
                            DifferentialFunctionBuilder const& df_builder);
 
     std::vector<DifferentialDependency> BuildDDs();
+
+    /*std::size_t GetCount() const {
+        return count;
+    }*/
 };
 
 }  // namespace algos::dd

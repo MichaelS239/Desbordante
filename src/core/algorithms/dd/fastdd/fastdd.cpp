@@ -153,6 +153,7 @@ unsigned long long FastDD::ExecuteInternal() {
     LOG(INFO) << "Built Inverter";
     std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
     LOG(INFO) << "Built DDs: " << dds.size();
+    // LOG(INFO) << "Count: " << hybrid_evidence_inverter.GetCount();
     if (dds.size() <= 100) {
         for (auto const& dd : dds) {
             LOG(INFO) << dd.ToString();

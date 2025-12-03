@@ -1,5 +1,6 @@
 #include "algorithms/dd/fastdd/util/evidence_inverter.h"
 
+#include <sstream>
 #include <utility>
 
 #include <easylogging++.h>
@@ -17,6 +18,13 @@ std::vector<std::size_t> EvidenceInverter::CountDFFrequencies() const {
             ++freqs[index];
         }
     }
+    /*std::stringstream ss;
+    ss << "Freqs: ";
+    for (std::size_t i = 0; i != df_num_; ++i) {
+        ss << freqs[i] << " ";
+    }
+    ss << '\n';
+    LOG(INFO) << ss.str();*/
 
     return freqs;
 }
@@ -56,6 +64,8 @@ std::unordered_set<boost::dynamic_bitset<>> EvidenceInverter::GetCovers() const 
 
     std::unordered_set<boost::dynamic_bitset<>> covers(positive_cover.begin(),
                                                        positive_cover.end());
+    // count += positive_cover.GetCount();
+    // LOG(INFO) << negative_cover.size() << " " << positive_cover.GetCount();
 
     return covers;
 }

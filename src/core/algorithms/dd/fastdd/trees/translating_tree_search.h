@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <utility>
 #include <vector>
 
 #include <boost/dynamic_bitset.hpp>
@@ -16,6 +17,21 @@ private:
     util::NTreeSearch tree_;
     BitsetTranslator translator_;
     std::vector<boost::dynamic_bitset<>> transformed_bitsets_;
+
+    // std::size_t count = 0;
+
+    // for repeatability (ensures same order)
+    boost::dynamic_bitset<> Reverse(boost::dynamic_bitset<>&& bitset) const {
+        std::size_t const bitset_size = bitset.size();
+        boost::dynamic_bitset<> reversed(std::move(bitset));
+        for (std::size_t i = 0; i != bitset_size / 2; ++i) {
+            bool temp = reversed[i];
+            reversed[i] = reversed[bitset_size - 1 - i];
+            reversed[bitset_size - 1 - i] = temp;
+        }
+
+        return reversed;
+    }
 
 public:
     TranslatingTreeSearch(std::vector<std::size_t> priorities,
@@ -45,12 +61,20 @@ public:
     bool Compare(boost::dynamic_bitset<> const& first_bitset,
                  boost::dynamic_bitset<> const& second_bitset) const {
         int diff = second_bitset.count() - first_bitset.count();
-        return diff != 0
-                       ? diff < 0
-                       : translator_.Transform(second_bitset) < translator_.Transform(first_bitset);
+        if (diff != 0) {
+            return diff < 0;
+        }
+        boost::dynamic_bitset<> const first_reversed = Reverse(translator_.Transform(first_bitset));
+        boost::dynamic_bitset<> const second_reversed =
+                Reverse(translator_.Transform(second_bitset));
+        return first_reversed > second_reversed;
     }
 
     void HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset);
+
+    /*std::size_t GetCount() {
+        return util::NTreeSearch::count;
+    }*/
 
     struct Iterator {
         using iterator_category = std::forward_iterator_tag;

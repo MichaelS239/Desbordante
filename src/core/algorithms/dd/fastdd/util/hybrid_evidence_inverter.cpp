@@ -94,17 +94,19 @@ std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
                 }
                 cur_diff_bitsets.push_back(std::move(diff_bitset));
             }
-            // LOG(INFO) << "Col " << i << "; Dif_func " << j - 1;
+            LOG(INFO) << "Col " << i << "; Dif_func " << j - 1 << "; "
+                      << dif_funcs_[i][j - 1].ToString();
 
             EvidenceInverter inverter(std::move(cur_diff_bitsets), dif_func_info_->dif_func_num_,
                                       column_to_dif_funcs_, i);
-            // LOG(INFO) << "Built inverter";
+            LOG(INFO) << "Built inverter";
             std::unordered_set<boost::dynamic_bitset<>> covers_set = inverter.GetCovers();
+            // count += inverter.GetCount();
             std::vector<boost::dynamic_bitset<>> covers(covers_set.begin(), covers_set.end());
-            // LOG(INFO) << "Got covers: " << covers.size();
+            LOG(INFO) << "Got covers: " << covers.size();
             std::vector<DifferentialDependency> minimized_covers =
                     Minimize(std::move(covers), i, j - 1);
-            // LOG(INFO) << "Minimized covers: " << minimized_covers.size();
+            LOG(INFO) << "Minimized covers: " << minimized_covers.size();
             std::move(minimized_covers.begin(), minimized_covers.end(), std::back_inserter(result));
         }
     }

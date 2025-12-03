@@ -14,6 +14,7 @@ private:
     std::vector<boost::dynamic_bitset<>> bitsets_;
     std::size_t df_num_;
     std::vector<boost::dynamic_bitset<>> column_to_dif_funcs_;
+    // mutable std::size_t count = 0;
 
     std::vector<std::size_t> CountDFFrequencies() const;
     std::vector<boost::dynamic_bitset<>> MinimizeDifferentialSet(
@@ -35,6 +36,10 @@ public:
     }
 
     std::unordered_set<boost::dynamic_bitset<>> GetCovers() const;
+
+    /*std::size_t GetCount() {
+        return count;
+    }*/
 };
 
 }  // namespace algos::dd
