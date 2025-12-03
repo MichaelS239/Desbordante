@@ -15,16 +15,17 @@ class Node {
 private:
     std::optional<boost::dynamic_bitset<>> bitset_;
 
-    std::unique_ptr<Node> left_child_;
-    std::unique_ptr<Node> right_child_;
-
     std::size_t bit_ = 0;
 
     std::optional<boost::dynamic_bitset<>> union_;
     std::optional<boost::dynamic_bitset<>> intersect_;
 
-    std::unique_ptr<Node> CreateInnerNode(std::unique_ptr<Node> first_leaf,
-                                          std::unique_ptr<Node> second_leaf, std::size_t bit) const;
+    std::unique_ptr<Node> left_child_;
+    std::unique_ptr<Node> right_child_;
+
+    static std::unique_ptr<Node> CreateInnerNode(std::unique_ptr<Node> first_leaf,
+                                                 std::unique_ptr<Node> second_leaf,
+                                                 std::size_t bit);
 
 public:
     enum class NodeType { EmptyNode, LeafNode, InnerNode };
@@ -37,38 +38,29 @@ public:
         // LOG(INFO) << "LeafConstructor";
     }
 
-    Node(std::size_t bit, std::unique_ptr<Node> left_child, std::unique_ptr<Node> right_child,
-         boost::dynamic_bitset<> const& union_bitset,
-         boost::dynamic_bitset<> const& intersect_bitset, NodeType node_type = NodeType::InnerNode)
+    Node(std::size_t bit, boost::dynamic_bitset<> const& union_bitset,
+         boost::dynamic_bitset<> const& intersect_bitset, std::unique_ptr<Node> left_child,
+         std::unique_ptr<Node> right_child, NodeType node_type = NodeType::InnerNode)
         : bit_(bit),
-          left_child_(std::move(left_child)),
-          right_child_(std::move(right_child)),
           union_(union_bitset),
           intersect_(intersect_bitset),
+          left_child_(std::move(left_child)),
+          right_child_(std::move(right_child)),
           node_type_(node_type) {
         // LOG(INFO) << "InnerConstructor";
     }
 
-    Node(std::size_t bit, std::unique_ptr<Node> left_child, std::unique_ptr<Node> right_child,
-         NodeType node_type = NodeType::InnerNode)
-        : Node(bit, std::move(left_child), std::move(right_child),
-               boost::operator|(left_child->bitset_.value(), right_child->bitset_.value()),
-               boost::operator&(left_child->bitset_.value(), right_child->bitset_.value())) {
-        assert(left_child->node_type_ == NodeType::LeafNode &&
-               right_child->node_type_ == NodeType::LeafNode);
-    }
-
-    std::unique_ptr<Node> Add(std::unique_ptr<Node> this_node,
-                              boost::dynamic_bitset<> const& bitset, std::size_t bit);
+    static std::unique_ptr<Node> Add(std::unique_ptr<Node> this_node,
+                                     boost::dynamic_bitset<> const& bitset, std::size_t bit);
 
     // is this needed?
-    std::unique_ptr<Node> Remove(std::unique_ptr<Node> this_node,
-                                 boost::dynamic_bitset<> const& bitset) {
-        if (node_type_ == NodeType::EmptyNode) {
+    static std::unique_ptr<Node> Remove(std::unique_ptr<Node> this_node,
+                                        boost::dynamic_bitset<> const& bitset) {
+        if (this_node->node_type_ == NodeType::EmptyNode) {
             return std::unique_ptr<Node>();
         }
-        if (node_type_ == NodeType::LeafNode) {
-            if (bitset == bitset_) {
+        if (this_node->node_type_ == NodeType::LeafNode) {
+            if (bitset == this_node->bitset_) {
                 return std::make_unique<Node>();
             }
             return this_node;
@@ -104,9 +96,8 @@ public:
             return std::nullopt;
         }
         if (node_type_ == NodeType::LeafNode) {
-            /*LOG(INFO) << "LeafFind: " << bitset_.has_value() << " " << bitset_.value().size() << "
-               "
-                      << bitset.size();*/
+            // LOG(INFO) << "LeafFind: " << bitset_.has_value() << " " << bitset_.value().size() <<
+            // " " << bitset.size();
             return bitset.is_subset_of(bitset_.value()) ? bitset_ : std::nullopt;
         }
         // LOG(INFO) << "InnerFind";

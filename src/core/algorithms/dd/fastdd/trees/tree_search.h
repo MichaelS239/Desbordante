@@ -18,7 +18,11 @@ private:
 
 public:
     void Add(boost::dynamic_bitset<> const& bitset) {
-        root_ = root_->Add(std::move(root_), bitset, 0);
+        std::unique_ptr<Node> new_root = Node::Add(std::move(root_), bitset, 0);
+        // LOG(INFO) << "Created!!";
+        root_ = std::move(new_root);
+        // LOG(INFO) << "MOVED!!!";
+        //  root_ = root_->Add(std::move(root_), bitset, 0);
         // LOG(INFO) << (root_->node_type_ == Node::NodeType::EmptyNode);
     }
 
