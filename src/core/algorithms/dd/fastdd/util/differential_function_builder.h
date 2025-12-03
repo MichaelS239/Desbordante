@@ -30,7 +30,7 @@ private:
     std::vector<std::size_t> dif_func_nums_;
 
     std::pair<std::vector<double>, std::vector<double>> GetThresholds(
-            model::TypedColumnData const& dif_column, model::ColumnIndex const column_index) const;
+            model::TypedColumnData const& dif_column) const;
 
     std::pair<std::vector<double>, std::vector<double>> SampleThresholds(
             model::ColumnIndex const column_index, std::vector<std::size_t> const& row_nums,
@@ -49,8 +49,8 @@ public:
         : typed_relation_(typed_relation),
           num_rows_(num_rows),
           num_columns_(num_columns),
-          thresholds_(num_columns),
-          distance_calculator_(distance_calculator) {}
+          distance_calculator_(distance_calculator),
+          thresholds_(num_columns) {}
 
     void BuildDFList(
             std::shared_ptr<model::ColumnLayoutTypedRelationData> difference_typed_relation);

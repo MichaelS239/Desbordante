@@ -18,7 +18,7 @@
 namespace algos::dd {
 
 std::pair<std::vector<double>, std::vector<double>> DifferentialFunctionBuilder::GetThresholds(
-        model::TypedColumnData const& dif_column, model::ColumnIndex const column_index) const {
+        model::TypedColumnData const& dif_column) const {
     std::size_t dif_num_rows = dif_column.GetNumRows();
 
     boost::regex df_regex(R"((>|<=) (.*)$)");
@@ -197,7 +197,7 @@ std::pair<std::vector<double>, std::vector<double>> DifferentialFunctionBuilder:
     }
 
     std::set<double> less_thresholds_set;
-    for (int i = 0; i != less_thresholds.size(); ++i) {
+    for (std::size_t i = 0; i != less_thresholds.size(); ++i) {
         less_thresholds_set.emplace(less_thresholds[i]);
     }
     std::vector<double> unique_less_thresholds;
@@ -205,7 +205,7 @@ std::pair<std::vector<double>, std::vector<double>> DifferentialFunctionBuilder:
                                   less_thresholds_set.end());
 
     std::set<double> greater_thresholds_set;
-    for (int i = 0; i != greater_thresholds.size(); ++i) {
+    for (std::size_t i = 0; i != greater_thresholds.size(); ++i) {
         greater_thresholds_set.emplace(greater_thresholds[i]);
     }
     std::vector<double> unique_greater_thresholds;
@@ -247,8 +247,8 @@ void DifferentialFunctionBuilder::BuildDFList(
     dif_func_nums_.push_back(0);
     if (difference_typed_relation) {
         for (model::ColumnIndex column_index = 0; column_index != num_columns_; ++column_index) {
-            auto const [less_thresholds, greater_thresholds] = GetThresholds(
-                    difference_typed_relation->GetColumnData(column_index), column_index);
+            auto const [less_thresholds, greater_thresholds] =
+                    GetThresholds(difference_typed_relation->GetColumnData(column_index));
             differential_functions_.emplace_back();
             AddThresholds(less_thresholds, greater_thresholds, column_index);
             LOG(INFO) << "Column: " << column_index;
