@@ -16,6 +16,31 @@ private:
     NTreeSearch tree_;
     BitsetTranslator translator_;
     std::vector<boost::dynamic_bitset<>> transformed_bitsets_;
+    std::size_t bitset_size_;
+
+    // for repeatability (ensures same order)
+    boost::dynamic_bitset<> Reverse(boost::dynamic_bitset<>&& bitset) const {
+        std::size_t const bitset_size = bitset.size();
+        boost::dynamic_bitset<> reversed(std::move(bitset));
+        for (std::size_t i = 0; i != bitset_size / 2; ++i) {
+            bool temp = reversed[i];
+            reversed[i] = reversed[bitset_size - 1 - i];
+            reversed[bitset_size - 1 - i] = temp;
+        }
+
+        return reversed;
+    }
+
+    static boost::dynamic_bitset<> ToDynamicBitset(model::Bitset<64> const& bs, std::size_t size) {
+        boost::dynamic_bitset<> bitset(size);
+        for (std::size_t index = bs._Find_first(); index != 64; index = bs._Find_next(index)) {
+            if (index >= size) {
+                break;
+            }
+            bitset.set(index);
+        }
+        return bitset;
+    }
 
 public:
     TranslatingTreeSearch(std::vector<std::size_t> priorities,
@@ -31,14 +56,14 @@ public:
 
     std::vector<boost::dynamic_bitset<>> GetAndRemoveGeneralizations(
             boost::dynamic_bitset<> const& bitset) {
-        std::vector<boost::dynamic_bitset<>> removed = tree_.GetAndRemoveGeneralizations(bitset);
+        std::vector<model::Bitset<64>> removed = tree_.GetAndRemoveGeneralizations(bitset);
         std::vector<boost::dynamic_bitset<>> retransformed;
         retransformed.reserve(removed.size());
         BitsetTranslator const& translator = translator_;
-        std::ranges::transform(removed, std::back_inserter(retransformed),
-                               [&translator](boost::dynamic_bitset<> const& bitset) {
-                                   return translator.Retransform(bitset);
-                               });
+        std::ranges::transform(
+                removed, std::back_inserter(retransformed), [&](model::Bitset<64> const& bitset) {
+                    return translator.Retransform(ToDynamicBitset(bitset, bitset_size_));
+                });
         return retransformed;
     }
 
@@ -59,11 +84,12 @@ public:
         using pointer = value_type const*;
         using reference = value_type const&;
 
-        Iterator(NTreeSearch::Iterator it, BitsetTranslator const& translator)
-            : it_(it), translator_(translator) {}
+        Iterator(NTreeSearch::Iterator it, BitsetTranslator const& translator,
+                 std::size_t bitset_size)
+            : it_(it), translator_(translator), bitset_size_(bitset_size) {}
 
         reference operator*() const {
-            cur_bitset_ = translator_.Retransform(*it_);
+            cur_bitset_ = translator_.Retransform(ToDynamicBitset(*it_, bitset_size_));
             return cur_bitset_;
         }
 
@@ -90,15 +116,16 @@ public:
     private:
         NTreeSearch::Iterator it_;
         BitsetTranslator const& translator_;
+        std::size_t bitset_size_;
         boost::dynamic_bitset<> mutable cur_bitset_;  // Looks weird. Is there a better way?
     };
 
     Iterator begin() {
-        return Iterator{tree_.begin(), translator_};
+        return Iterator{tree_.begin(), translator_, bitset_size_};
     }
 
     Iterator end() {
-        return Iterator{tree_.end(), translator_};
+        return Iterator{tree_.end(), translator_, bitset_size_};
     }
 };
 

@@ -21,12 +21,19 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
                            [&translator](boost::dynamic_bitset<> const& bitset) {
                                return translator.Transform(bitset);
                            });
+    bitset_size_ = transformed_bitsets_[0].size();
+    tree_ = util::NTreeSearch();
 }
 
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
     boost::dynamic_bitset<> transformed_invalid_bitset = translator_.Transform(invalid_bitset);
-    std::vector<boost::dynamic_bitset<>> removed =
+    std::vector<model::Bitset<64>> static_removed =
             tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    std::vector<boost::dynamic_bitset<>> removed;
+    removed.reserve(static_removed.size());
+    std::ranges::transform(
+            static_removed, std::back_inserter(removed),
+            [&](model::Bitset<64> const& bitset) { return ToDynamicBitset(bitset, bitset_size_); });
 
     for (std::size_t i = 0; i != removed.size(); ++i) {
         for (std::size_t j = 0; j != transformed_bitsets_.size(); ++j) {
