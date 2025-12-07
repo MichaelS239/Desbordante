@@ -31,13 +31,13 @@ public:
 
     std::vector<boost::dynamic_bitset<>> GetAndRemoveGeneralizations(
             boost::dynamic_bitset<> const& bitset) {
-        std::vector<boost::dynamic_bitset<>> removed = tree_.GetAndRemoveGeneralizations(bitset);
+        std::vector<util::DynamicBitset> removed = tree_.GetAndRemoveGeneralizations(bitset);
         std::vector<boost::dynamic_bitset<>> retransformed;
         retransformed.reserve(removed.size());
         BitsetTranslator const& translator = translator_;
         std::ranges::transform(removed, std::back_inserter(retransformed),
-                               [&translator](boost::dynamic_bitset<> const& bitset) {
-                                   return translator.Retransform(bitset);
+                               [&](util::DynamicBitset const& bitset) {
+                                   return translator.Retransform(bitset.ToBoostDynamicBitset());
                                });
         return retransformed;
     }
@@ -63,7 +63,7 @@ public:
             : it_(it), translator_(translator) {}
 
         reference operator*() const {
-            cur_bitset_ = translator_.Retransform(*it_);
+            cur_bitset_ = translator_.Retransform(it_->ToBoostDynamicBitset());
             return cur_bitset_;
         }
 

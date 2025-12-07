@@ -7,7 +7,8 @@
 namespace algos::dd {
 
 TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities,
-                                             std::vector<boost::dynamic_bitset<>> const& bitsets) {
+                                             std::vector<boost::dynamic_bitset<>> const& bitsets)
+    : tree_(bitsets[0].size()) {
     std::vector<std::size_t> indices(priorities.size());
     std::iota(indices.begin(), indices.end(), 0);
     std::ranges::sort(indices, [&priorities](std::size_t i, std::size_t j) {
@@ -25,8 +26,13 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
 
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
     boost::dynamic_bitset<> transformed_invalid_bitset = translator_.Transform(invalid_bitset);
-    std::vector<boost::dynamic_bitset<>> removed =
+    std::vector<util::DynamicBitset> static_removed =
             tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    std::vector<boost::dynamic_bitset<>> removed;
+    removed.reserve(static_removed.size());
+    std::ranges::transform(
+            static_removed, std::back_inserter(removed),
+            [&](util::DynamicBitset const& bitset) { return bitset.ToBoostDynamicBitset(); });
 
     for (std::size_t i = 0; i != removed.size(); ++i) {
         for (std::size_t j = 0; j != transformed_bitsets_.size(); ++j) {
