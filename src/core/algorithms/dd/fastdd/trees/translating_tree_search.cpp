@@ -23,6 +23,7 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
                    [&translator](boost::dynamic_bitset<> const& bitset) {
                        return translator.Transform(bitset);
                    });
+    bitset_size_ = transformed_bitsets_[0].size();
     /*for (std::size_t i = 0; i != bitsets.size(); ++i) {
         LOG(INFO) << transformed_bitsets_[i];
     }*/
@@ -33,8 +34,13 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
     boost::dynamic_bitset<> transformed_invalid_bitset = translator_.Transform(invalid_bitset);
     // LOG(INFO) << "Transformed";
-    std::vector<boost::dynamic_bitset<>> removed =
+    std::vector</*boost::dynamic_bitset<>*/ model::Bitset<64>> static_removed =
             tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    // LOG(INFO) << "Removed generalizations: " << static_removed.size();
+    std::vector<boost::dynamic_bitset<>> removed(static_removed.size());  // TODO: add back_inserter
+    std::transform(
+            static_removed.begin(), static_removed.end(), removed.begin(),
+            [&](model::Bitset<64> const& bitset) { return ToDynamicBitset(bitset, bitset_size_); });
     //++count;
     // LOG(INFO) << "Removed generalizations: " << removed.size();
     /*if (count < 50) {

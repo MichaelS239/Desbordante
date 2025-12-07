@@ -36,6 +36,12 @@ int main(int argc, char** argv) {
     fastdd.SetOption("shard_length");
     fastdd.Execute();
 
+    /*LOG(INFO) << sizeof(boost::dynamic_bitset<>);
+    boost::dynamic_bitset<> a(64, false);
+    LOG(INFO) << sizeof(a);
+    LOG(INFO) << sizeof(std::optional<boost::dynamic_bitset<>>);
+    LOG(INFO) << sizeof(std::bitset<64>);*/
+
     /*boost::dynamic_bitset<> a(10, false);
     boost::dynamic_bitset<> b(10, false);
     a[5] = true;
