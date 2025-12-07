@@ -59,15 +59,17 @@ public:
 
     std::vector<boost::dynamic_bitset<>> GetAndRemoveGeneralizations(
             boost::dynamic_bitset<> const& bitset) {
-        std::vector</*boost::dynamic_bitset<>*/ model::Bitset<64>> removed =
+        std::vector</*boost::dynamic_bitset<>*/ /*model::Bitset<64>*/ util::DynamicBitset> removed =
                 tree_.GetAndRemoveGeneralizations(bitset);
         std::vector<boost::dynamic_bitset<>> retransformed(
                 removed.size());  // TODO: add back_inserter
         BitsetTranslator const& translator = translator_;
-        std::transform(removed.begin(), removed.end(), retransformed.begin(),
-                       [&](/*boost::dynamic_bitset<>*/ model::Bitset<64> const& bitset) {
-                           return translator.Retransform(ToDynamicBitset(bitset, bitset_size_));
-                       });
+        std::transform(
+                removed.begin(), removed.end(), retransformed.begin(),
+                [&](/*boost::dynamic_bitset<>*/ /*model::Bitset<64>*/ util::DynamicBitset const&
+                            bitset) {
+                    return translator.Retransform(bitset.ToBoostDynamicBitset());
+                });
         return retransformed;
     }
 
@@ -101,7 +103,7 @@ public:
             : it_(it), translator_(translator), bitset_size_(bitset_size) {}
 
         reference operator*() const {
-            cur_bitset_ = translator_.Retransform(ToDynamicBitset(*it_, bitset_size_));
+            cur_bitset_ = translator_.Retransform(it_->ToBoostDynamicBitset());
             return cur_bitset_;
         }
 

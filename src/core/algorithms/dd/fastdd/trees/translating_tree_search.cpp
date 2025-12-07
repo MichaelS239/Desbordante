@@ -9,7 +9,8 @@
 namespace algos::dd {
 
 TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities,
-                                             std::vector<boost::dynamic_bitset<>> const& bitsets) {
+                                             std::vector<boost::dynamic_bitset<>> const& bitsets)
+    : tree_(bitsets[0].size()) {
     std::vector<std::size_t> indices(priorities.size());
     std::iota(indices.begin(), indices.end(), 0);
     std::sort(indices.begin(), indices.end(), [&priorities](std::size_t i, std::size_t j) {
@@ -27,20 +28,20 @@ TranslatingTreeSearch::TranslatingTreeSearch(std::vector<std::size_t> priorities
     /*for (std::size_t i = 0; i != bitsets.size(); ++i) {
         LOG(INFO) << transformed_bitsets_[i];
     }*/
-    tree_ = util::NTreeSearch();
-    // util::NTreeSearch::count = 0;
+    // tree_ = util::NTreeSearch(bitset_size_);
+    //  util::NTreeSearch::count = 0;
 }
 
 void TranslatingTreeSearch::HandleInvalid(boost::dynamic_bitset<> const& invalid_bitset) {
     boost::dynamic_bitset<> transformed_invalid_bitset = translator_.Transform(invalid_bitset);
     // LOG(INFO) << "Transformed";
-    std::vector</*boost::dynamic_bitset<>*/ model::Bitset<64>> static_removed =
-            tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
+    std::vector</*boost::dynamic_bitset<>*/ /*model::Bitset<64>*/ util::DynamicBitset>
+            static_removed = tree_.GetAndRemoveGeneralizations(transformed_invalid_bitset);
     // LOG(INFO) << "Removed generalizations: " << static_removed.size();
     std::vector<boost::dynamic_bitset<>> removed(static_removed.size());  // TODO: add back_inserter
     std::transform(
             static_removed.begin(), static_removed.end(), removed.begin(),
-            [&](model::Bitset<64> const& bitset) { return ToDynamicBitset(bitset, bitset_size_); });
+            [&](util::DynamicBitset const& bitset) { return bitset.ToBoostDynamicBitset(); });
     //++count;
     // LOG(INFO) << "Removed generalizations: " << removed.size();
     /*if (count < 50) {
