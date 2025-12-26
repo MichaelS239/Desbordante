@@ -1,11 +1,11 @@
 #pragma once
 
-#include <list>
 #include <memory>
 #include <vector>
 
-#include "core/algorithms/algorithm.h"
 #include "core/algorithms/dd/dd.h"
+#include "core/algorithms/dd/dd_algorithm.h"
+#include "core/algorithms/dd/fastdd/model/differential_dependency.h"
 #include "core/config/tabular_data/input_table_type.h"
 #include "core/model/table/column_index.h"
 #include "core/model/table/column_layout_typed_relation_data.h"
@@ -13,7 +13,7 @@
 
 namespace algos::dd {
 
-class FastDD : public Algorithm {
+class FastDD final : public DDAlgorithm {
 private:
     config::InputTable input_table_;
 
@@ -27,12 +27,16 @@ private:
     config::InputTable operator_difference_table_;
     std::shared_ptr<model::ColumnLayoutTypedRelationData> difference_typed_relation_;
 
+    std::vector<DifferentialDependency> dds_;
+
     void RegisterOptions();
     void SetLimits();
     void CheckTypes();
     void ParseDifferenceTable();
 
-    void ResetState() final {}
+    virtual void ResetStateDD() override {
+        dds_.clear();
+    }
 
 protected:
     void LoadDataInternal() override;
@@ -42,7 +46,9 @@ protected:
 public:
     FastDD();
 
-    std::list<model::DDString> GetDDs() const;
+    std::vector<DifferentialDependency> const& GetDDs() const {
+        return dds_;
+    }
 };
 
 }  // namespace algos::dd

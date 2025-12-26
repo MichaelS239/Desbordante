@@ -66,7 +66,7 @@ void BindDD(py::module_& main_module) {
                         return model::DDString{std::move(left_list), std::move(right_list)};
                     }));
 
-    BindPrimitiveNoBase<dd::Split>(dd_module, "Split").def("get_dds", &dd::Split::GetDDStringList);
-    BindPrimitiveNoBase<dd::FastDD>(dd_module, "FastDD").def("get_dds", &dd::FastDD::GetDDs);
+    BindPrimitive<dd::FastDD, dd::Split>(dd_module, &dd::DDAlgorithm::DDList, "DdAlgorithm",
+                                         "get_dds", {"FastDD", "Split"});
 }
 }  // namespace python_bindings

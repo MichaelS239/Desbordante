@@ -1,7 +1,10 @@
 #include "core/algorithms/dd/fastdd/fastdd.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cstddef>
+#include <limits>
+#include <list>
 #include <stdexcept>
 #include <utility>
 
@@ -18,7 +21,7 @@
 
 namespace algos::dd {
 
-FastDD::FastDD() : Algorithm({}) {
+FastDD::FastDD() : DDAlgorithm({}) {
     RegisterOptions();
     MakeOptionsAvailable({config::kTableOpt.GetName()});
 }
@@ -150,23 +153,38 @@ unsigned long long FastDD::ExecuteInternal() {
     }*/
     HybridEvidenceInverter hybrid_evidence_inverter(std::move(match_dfs), df_builder);
     LOG_INFO("Built Inverter");
-    std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
-    LOG_INFO("Built DDs: {}", dds.size());
+    dds_ = hybrid_evidence_inverter.BuildDDs();
+    LOG_INFO("Built DDs: {}", dds_.size());
     // LOG(INFO) << "Count: " << hybrid_evidence_inverter.GetCount();
-    if (dds.size() <= 100) {
-        for (auto const& dd : dds) {
+    if (dds_.size() <= 100) {
+        for (auto const& dd : dds_) {
             LOG_DEBUG(dd.ToString());
         }
     }
+
+    std::for_each(dds_.begin(), dds_.end(), [this](auto const& dd) {
+        auto df_to_constraint = [](DifferentialFunction const& df) {
+            return df.GetOperator() == Operator::kGreater
+                           ? model::DFStringConstraint{df.GetColumn()->GetName(),
+                                                       {df.GetThreshold() + 0.001,
+                                                        std::numeric_limits<double>::infinity()}}
+                           : model::DFStringConstraint{df.GetColumn()->GetName(),
+                                                       {0, df.GetThreshold()}};
+        };
+
+        std::list<model::DFStringConstraint> lhs;
+        std::transform(dd.GetLhs().begin(), dd.GetLhs().end(), std::back_inserter(lhs),
+                       df_to_constraint);
+
+        std::list<model::DFStringConstraint> rhs = {df_to_constraint(dd.GetRhs())};
+
+        RegisterDD(model::DDString{std::move(lhs), std::move(rhs)});
+    });
 
     elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
     LOG_DEBUG("Algorithm time: {}", elapsed_milliseconds.count());
     return elapsed_milliseconds.count();
-}
-
-std::list<model::DDString> FastDD::GetDDs() const {
-    return {};
 }
 
 }  // namespace algos::dd
