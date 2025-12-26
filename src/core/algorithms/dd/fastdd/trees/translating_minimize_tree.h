@@ -7,8 +7,8 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "algorithms/dd/fastdd/trees/minimize_tree.h"
-#include "algorithms/dd/fastdd/util/dif_func_info.h"
+#include "core/algorithms/dd/fastdd/trees/minimize_tree.h"
+#include "core/algorithms/dd/fastdd/util/dif_func_info.h"
 
 namespace algos::dd {
 

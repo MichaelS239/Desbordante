@@ -5,10 +5,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "algorithms/dd/fastdd/model/diff_set.h"
-#include "algorithms/dd/fastdd/model/pli_shard.h"
-#include "algorithms/dd/fastdd/util/differential_function_builder.h"
-#include "algorithms/dd/fastdd/util/isn_info.h"
+#include "core/algorithms/dd/fastdd/model/diff_set.h"
+#include "core/algorithms/dd/fastdd/model/pli_shard.h"
+#include "core/algorithms/dd/fastdd/util/differential_function_builder.h"
+#include "core/algorithms/dd/fastdd/util/isn_info.h"
 
 namespace algos::dd {
 

@@ -1,4 +1,4 @@
-#include "algorithms/dd/fastdd/model/pli_shard.h"
+#include "core/algorithms/dd/fastdd/model/pli_shard.h"
 
 #include <algorithm>
 #include <cstddef>
@@ -8,12 +8,10 @@
 #include <stdexcept>
 #include <unordered_set>
 
-#include <easylogging++.h>
-
-#include "algorithms/dd/fastdd/providers/index_provider.h"
-#include "model/table/column_index.h"
-#include "model/types/builtin.h"
-#include "model/types/type.h"
+#include "core/algorithms/dd/fastdd/providers/index_provider.h"
+#include "core/model/table/column_index.h"
+#include "core/model/types/builtin.h"
+#include "core/model/types/type.h"
 
 namespace algos::dd {
 

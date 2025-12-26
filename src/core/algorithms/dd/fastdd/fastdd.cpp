@@ -1,21 +1,20 @@
-#include "algorithms/dd/fastdd/fastdd.h"
+#include "core/algorithms/dd/fastdd/fastdd.h"
 
 #include <chrono>
 #include <cstddef>
 #include <stdexcept>
 #include <utility>
 
-#include <easylogging++.h>
-
-#include "algorithms/dd/fastdd/model/pli_shard.h"
-#include "algorithms/dd/fastdd/util/diff_set_builder.h"
-#include "algorithms/dd/fastdd/util/differential_function_builder.h"
-#include "algorithms/dd/fastdd/util/distance_calculator.h"
-#include "algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
-#include "config/names_and_descriptions.h"
-#include "config/option_using.h"
-#include "config/tabular_data/input_table/option.h"
-#include "model/table/column_index.h"
+#include "core/algorithms/dd/fastdd/model/pli_shard.h"
+#include "core/algorithms/dd/fastdd/util/diff_set_builder.h"
+#include "core/algorithms/dd/fastdd/util/differential_function_builder.h"
+#include "core/algorithms/dd/fastdd/util/distance_calculator.h"
+#include "core/algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
+#include "core/config/names_and_descriptions.h"
+#include "core/config/option_using.h"
+#include "core/config/tabular_data/input_table/option.h"
+#include "core/model/table/column_index.h"
+#include "core/util/logger.h"
 
 namespace algos::dd {
 
@@ -113,7 +112,7 @@ void FastDD::ParseDifferenceTable() {
 
 unsigned long long FastDD::ExecuteInternal() {
     auto const start_time = std::chrono::system_clock::now();
-    LOG(INFO) << "Start";
+    LOG_INFO("Start");
 
     SetLimits();
     CheckTypes();
@@ -124,45 +123,45 @@ unsigned long long FastDD::ExecuteInternal() {
     DifferentialFunctionBuilder df_builder(typed_relation_, num_rows_, num_columns_,
                                            distance_calculator);
     df_builder.BuildDFList(difference_typed_relation_);
-    LOG(INFO) << "Built DF set";
+    LOG_INFO("Built DF set");
     PliShardBuilder pli_shard_builder(shard_length_);
     std::vector<PliShard> pli_shards =
             pli_shard_builder.BuildPliShards(typed_relation_->GetColumnData());
-    LOG(INFO) << "Built PLIs";
-    LOG(INFO) << "Number of PLI shards: " << pli_shards.size();
+    LOG_INFO("Built PLIs");
+    LOG_DEBUG("Number of PLI shards: {}", pli_shards.size());
     auto elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
-    LOG(INFO) << "Current time: " << elapsed_milliseconds.count();
+    LOG_DEBUG("Current time: {}", elapsed_milliseconds.count());
     /*for (std::size_t i = 0; i != pli_shards.size(); ++i) {
         LOG(INFO) << pli_shards[i].ToString();
     }*/
     DiffSetBuilder diff_set_builder(df_builder, distance_calculator);
     diff_set_builder.BuildDiffSet(std::move(pli_shards));
     DiffSet diff_set = diff_set_builder.GetDiffSet();
-    LOG(INFO) << "Built Diff-Set";
+    LOG_INFO("Built Diff-Set");
     std::vector<MatchDF> match_dfs = diff_set.GetMatchDFs();
-    LOG(INFO) << "Diff-Set size: " << match_dfs.size();
+    LOG_DEBUG("Diff-Set size: {}", match_dfs.size());
     elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
-    LOG(INFO) << "Current time: " << elapsed_milliseconds.count();
+    LOG_DEBUG("Current time: {}", elapsed_milliseconds.count());
     /*for (auto const& match_df : match_dfs) {
         boost::dynamic_bitset<> bitset = match_df.GetBitset();
         LOG(INFO) << bitset;
     }*/
     HybridEvidenceInverter hybrid_evidence_inverter(std::move(match_dfs), df_builder);
-    LOG(INFO) << "Built Inverter";
+    LOG_INFO("Built Inverter");
     std::vector<DifferentialDependency> dds = hybrid_evidence_inverter.BuildDDs();
-    LOG(INFO) << "Built DDs: " << dds.size();
+    LOG_INFO("Built DDs: {}", dds.size());
     // LOG(INFO) << "Count: " << hybrid_evidence_inverter.GetCount();
     if (dds.size() <= 100) {
         for (auto const& dd : dds) {
-            LOG(INFO) << dd.ToString();
+            LOG_DEBUG(dd.ToString());
         }
     }
 
     elapsed_milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now() - start_time);
-    LOG(INFO) << "Algorithm time: " << elapsed_milliseconds.count();
+    LOG_DEBUG("Algorithm time: {}", elapsed_milliseconds.count());
     return elapsed_milliseconds.count();
 }
 

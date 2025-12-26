@@ -7,11 +7,11 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "algorithms/dd/fastdd/model/differential_dependency.h"
-#include "algorithms/dd/fastdd/model/match_df.h"
-#include "algorithms/dd/fastdd/trees/translating_minimize_tree.h"
-#include "algorithms/dd/fastdd/util/dif_func_info.h"
-#include "algorithms/dd/fastdd/util/differential_function_builder.h"
+#include "core/algorithms/dd/fastdd/model/differential_dependency.h"
+#include "core/algorithms/dd/fastdd/model/match_df.h"
+#include "core/algorithms/dd/fastdd/trees/translating_minimize_tree.h"
+#include "core/algorithms/dd/fastdd/util/dif_func_info.h"
+#include "core/algorithms/dd/fastdd/util/differential_function_builder.h"
 
 namespace algos::dd {
 

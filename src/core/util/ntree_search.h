@@ -10,9 +10,9 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <boost/unordered/unordered_flat_map.hpp>
-#include <easylogging++.h>
 
-#include "util/dynamic_bitset.h"
+#include "core/util/dynamic_bitset.h"
+#include "core/util/logger.h"
 
 namespace util {
 

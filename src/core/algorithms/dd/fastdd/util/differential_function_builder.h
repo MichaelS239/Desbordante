@@ -4,14 +4,14 @@
 #include <memory>
 #include <vector>
 
-#include "algorithms/dd/fastdd/model/differential_function.h"
-#include "algorithms/dd/fastdd/providers/df_provider.h"
-#include "algorithms/dd/fastdd/providers/index_provider.h"
-#include "algorithms/dd/fastdd/util/distance_calculator.h"
-#include "model/table/column_index.h"
-#include "model/table/column_layout_typed_relation_data.h"
-#include "model/table/typed_column_data.h"
-#include "model/types/type.h"
+#include "core/algorithms/dd/fastdd/model/differential_function.h"
+#include "core/algorithms/dd/fastdd/providers/df_provider.h"
+#include "core/algorithms/dd/fastdd/providers/index_provider.h"
+#include "core/algorithms/dd/fastdd/util/distance_calculator.h"
+#include "core/model/table/column_index.h"
+#include "core/model/table/column_layout_typed_relation_data.h"
+#include "core/model/table/typed_column_data.h"
+#include "core/model/types/type.h"
 
 namespace algos::dd {
 

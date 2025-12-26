@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "model/table/column_layout_typed_relation_data.h"
-#include "model/types/imetrizable_type.h"
-#include "model/types/type.h"
+#include "core/model/table/column_layout_typed_relation_data.h"
+#include "core/model/types/imetrizable_type.h"
+#include "core/model/types/type.h"
 
 namespace algos::dd {
 

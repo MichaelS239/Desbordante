@@ -1,4 +1,4 @@
-#include "algorithms/dd/fastdd/util/isn_info.h"
+#include "core/algorithms/dd/fastdd/util/isn_info.h"
 
 #include <utility>
 

@@ -1,4 +1,4 @@
-#include "algorithms/dd/fastdd/trees/minimize_tree.h"
+#include "core/algorithms/dd/fastdd/trees/minimize_tree.h"
 
 namespace algos::dd {
 

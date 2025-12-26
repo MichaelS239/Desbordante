@@ -7,7 +7,6 @@
 #include <utility>
 
 #include <boost/dynamic_bitset.hpp>
-#include <easylogging++.h>
 
 namespace algos::dd {
 

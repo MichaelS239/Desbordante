@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "algorithms/dd/fastdd/util/differential_function_builder.h"
-#include "model/table/column_index.h"
+#include "core/algorithms/dd/fastdd/util/differential_function_builder.h"
+#include "core/model/table/column_index.h"
 
 namespace algos::dd {
 

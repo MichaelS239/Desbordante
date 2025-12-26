@@ -1,12 +1,11 @@
-#include "algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
+#include "core/algorithms/dd/fastdd/util/hybrid_evidence_inverter.h"
 
 #include <unordered_set>
 #include <utility>
 
-#include <easylogging++.h>
-
-#include "algorithms/dd/fastdd/trees/translating_minimize_tree.h"
-#include "algorithms/dd/fastdd/util/evidence_inverter.h"
+#include "core/algorithms/dd/fastdd/trees/translating_minimize_tree.h"
+#include "core/algorithms/dd/fastdd/util/evidence_inverter.h"
+#include "core/util/logger.h"
 
 namespace algos::dd {
 
@@ -73,7 +72,7 @@ void HybridEvidenceInverter::BuildClueIndices() {
 
 std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
     BuildClueIndices();
-    LOG(INFO) << "Built clue indices";
+    LOG_INFO("Built clue indices");
 
     std::vector<DifferentialDependency> result;
 
@@ -94,19 +93,18 @@ std::vector<DifferentialDependency> HybridEvidenceInverter::BuildDDs() {
                 }
                 cur_diff_bitsets.push_back(std::move(diff_bitset));
             }
-            LOG(INFO) << "Col " << i << "; Dif_func " << j - 1 << "; "
-                      << dif_funcs_[i][j - 1].ToString();
+            LOG_DEBUG("Col {}; Dif_func {}; {}", i, j - 1, dif_funcs_[i][j - 1].ToString());
 
             EvidenceInverter inverter(std::move(cur_diff_bitsets), dif_func_info_->dif_func_num_,
                                       column_to_dif_funcs_, i);
-            LOG(INFO) << "Built inverter";
+            LOG_DEBUG("Built inverter");
             std::unordered_set<boost::dynamic_bitset<>> covers_set = inverter.GetCovers();
             // count += inverter.GetCount();
             std::vector<boost::dynamic_bitset<>> covers(covers_set.begin(), covers_set.end());
-            LOG(INFO) << "Got covers: " << covers.size();
+            LOG_DEBUG("Got covers: {}", covers.size());
             std::vector<DifferentialDependency> minimized_covers =
                     Minimize(std::move(covers), i, j - 1);
-            LOG(INFO) << "Minimized covers: " << minimized_covers.size();
+            LOG_DEBUG("Minimized covers: {}", minimized_covers.size());
             std::move(minimized_covers.begin(), minimized_covers.end(), std::back_inserter(result));
         }
     }

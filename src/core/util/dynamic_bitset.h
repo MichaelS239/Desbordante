@@ -4,7 +4,7 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "model/types/bitset.h"
+#include "core/model/types/bitset.h"
 
 namespace util {
 

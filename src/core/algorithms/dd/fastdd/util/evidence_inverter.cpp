@@ -1,12 +1,10 @@
-#include "algorithms/dd/fastdd/util/evidence_inverter.h"
+#include "core/algorithms/dd/fastdd/util/evidence_inverter.h"
 
 #include <sstream>
 #include <utility>
 
-#include <easylogging++.h>
-
-#include "algorithms/dd/fastdd/trees/translating_tree_search.h"
-#include "algorithms/dd/fastdd/trees/tree_search.h"
+#include "core/algorithms/dd/fastdd/trees/translating_tree_search.h"
+#include "core/algorithms/dd/fastdd/trees/tree_search.h"
 
 namespace algos::dd {
 

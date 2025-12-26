@@ -1,9 +1,7 @@
-#include "algorithms/dd/fastdd/trees/translating_minimize_tree.h"
+#include "core/algorithms/dd/fastdd/trees/translating_minimize_tree.h"
 
 #include <algorithm>
 #include <unordered_set>
-
-#include <easylogging++.h>
 
 namespace algos::dd {
 

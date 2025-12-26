@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 
-#include "algorithms/dd/fastdd/model/differential_function.h"
+#include "core/algorithms/dd/fastdd/model/differential_function.h"
 
 namespace algos::dd {
 

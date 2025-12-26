@@ -6,9 +6,8 @@
 #include <utility>
 
 #include <boost/dynamic_bitset.hpp>
-#include <easylogging++.h>
 
-#include "algorithms/dd/fastdd/trees/node.h"
+#include "core/algorithms/dd/fastdd/trees/node.h"
 
 namespace algos::dd {
 

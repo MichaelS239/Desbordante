@@ -1,12 +1,12 @@
-#include "algorithms/dd/fastdd/util/diff_set_builder.h"
+#include "core/algorithms/dd/fastdd/util/diff_set_builder.h"
 
 #include <cstddef>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
-#include "algorithms/dd/fastdd/util/cross_isn_builder.h"
-#include "algorithms/dd/fastdd/util/single_isn_builder.h"
+#include "core/algorithms/dd/fastdd/util/cross_isn_builder.h"
+#include "core/algorithms/dd/fastdd/util/single_isn_builder.h"
 
 namespace algos::dd {
 

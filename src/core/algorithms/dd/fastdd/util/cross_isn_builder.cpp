@@ -1,9 +1,9 @@
-#include "algorithms/dd/fastdd/util/cross_isn_builder.h"
+#include "core/algorithms/dd/fastdd/util/cross_isn_builder.h"
 
 #include <algorithm>
 #include <utility>
 
-#include "algorithms/dd/dd.h"
+#include "core/algorithms/dd/dd.h"
 
 namespace algos::dd {
 

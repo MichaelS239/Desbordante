@@ -2,9 +2,9 @@
 
 #include <unordered_map>
 
-#include "algorithms/dd/fastdd/model/differential_function.h"
-#include "algorithms/dd/fastdd/model/operator.h"
-#include "model/table/column.h"
+#include "core/algorithms/dd/fastdd/model/differential_function.h"
+#include "core/algorithms/dd/fastdd/model/operator.h"
+#include "core/model/table/column.h"
 
 namespace algos::dd {
 

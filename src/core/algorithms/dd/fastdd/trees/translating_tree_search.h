@@ -7,8 +7,8 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "algorithms/dd/fastdd/util/bitset_translator.h"
-#include "util/ntree_search.h"
+#include "core/algorithms/dd/fastdd/util/bitset_translator.h"
+#include "core/util/ntree_search.h"
 
 namespace algos::dd {
 

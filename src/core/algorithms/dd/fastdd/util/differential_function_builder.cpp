@@ -1,4 +1,4 @@
-#include "differential_function_builder.h"
+#include "core/algorithms/dd/fastdd/util/differential_function_builder.h"
 
 #include <cstddef>
 #include <random>
@@ -9,11 +9,11 @@
 #include <vector>
 
 #include <boost/regex.hpp>
-#include <easylogging++.h>
 
-#include "algorithms/dd/dd.h"
-#include "model/table/typed_column_data.h"
-#include "model/types/builtin.h"
+#include "core/algorithms/dd/dd.h"
+#include "core/model/table/typed_column_data.h"
+#include "core/model/types/builtin.h"
+#include "core/util/logger.h"
 
 namespace algos::dd {
 
@@ -241,7 +241,7 @@ void DifferentialFunctionBuilder::AddThresholds(std::vector<double> const& less_
 
 void DifferentialFunctionBuilder::BuildDFList(
         std::shared_ptr<model::ColumnLayoutTypedRelationData> difference_typed_relation) {
-    LOG(INFO) << num_columns_;
+    LOG_DEBUG("{}", num_columns_);
     differential_functions_.reserve(num_columns_);
     dif_func_nums_.reserve(num_columns_ + 1);
     dif_func_nums_.push_back(0);
@@ -251,14 +251,14 @@ void DifferentialFunctionBuilder::BuildDFList(
                     GetThresholds(difference_typed_relation->GetColumnData(column_index));
             differential_functions_.emplace_back();
             AddThresholds(less_thresholds, greater_thresholds, column_index);
-            LOG(INFO) << "Column: " << column_index;
-            LOG(INFO) << "Less:";
+            LOG_DEBUG("Column: {}", column_index);
+            LOG_DEBUG("Less:");
             for (std::size_t i = 0; i != less_thresholds.size(); ++i) {
-                LOG(INFO) << less_thresholds[i];
+                LOG_DEBUG("{}", less_thresholds[i]);
             }
-            LOG(INFO) << "Greater:";
+            LOG_DEBUG("Greater:");
             for (std::size_t i = 0; i != greater_thresholds.size(); ++i) {
-                LOG(INFO) << greater_thresholds[i];
+                LOG_DEBUG("{}", greater_thresholds[i]);
             }
             dif_func_nums_.push_back(dif_func_nums_[column_index] +
                                      differential_functions_[column_index].size());
@@ -273,14 +273,14 @@ void DifferentialFunctionBuilder::BuildDFList(
                                                taken from the original implementation */
             differential_functions_.emplace_back();
             AddThresholds(less_thresholds, greater_thresholds, column_index);
-            LOG(INFO) << "Column: " << column_index;
-            LOG(INFO) << "Less:";
+            LOG_DEBUG("Column: {}", column_index);
+            LOG_DEBUG("Less:");
             for (std::size_t i = 0; i != less_thresholds.size(); ++i) {
-                LOG(INFO) << less_thresholds[i];
+                LOG_DEBUG("{}", less_thresholds[i]);
             }
-            LOG(INFO) << "Greater:";
+            LOG_DEBUG("Greater:");
             for (std::size_t i = 0; i != greater_thresholds.size(); ++i) {
-                LOG(INFO) << greater_thresholds[i];
+                LOG_DEBUG("{}", greater_thresholds[i]);
             }
             dif_func_nums_.push_back(dif_func_nums_[column_index] +
                                      differential_functions_[column_index].size());

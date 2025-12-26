@@ -1,6 +1,4 @@
-#include "algorithms/dd/fastdd/trees/node.h"
-
-#include <easylogging++.h>
+#include "core/algorithms/dd/fastdd/trees/node.h"
 
 namespace algos::dd {
 

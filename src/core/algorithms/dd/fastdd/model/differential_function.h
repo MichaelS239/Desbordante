@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "algorithms/dd/fastdd/model/operator.h"
-#include "model/table/column.h"
+#include "core/algorithms/dd/fastdd/model/operator.h"
+#include "core/model/table/column.h"
 
 namespace algos::dd {
 

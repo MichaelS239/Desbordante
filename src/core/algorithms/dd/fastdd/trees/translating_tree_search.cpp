@@ -1,10 +1,8 @@
-#include "algorithms/dd/fastdd/trees/translating_tree_search.h"
+#include "core/algorithms/dd/fastdd/trees/translating_tree_search.h"
 
 #include <algorithm>
 #include <numeric>
 #include <utility>
-
-#include <easylogging++.h>
 
 namespace algos::dd {
 
