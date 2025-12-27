@@ -45,3 +45,6 @@ if(DESBORDANTE_SAFE_VERTICAL_HASHING)
         ${BINARY} PUBLIC DESBORDANTE_SAFE_VERTICAL_HASHING # Affects compilation of dependent code
     )
 endif()
+
+add_executable(${BINARY}_run main.cpp)
+target_link_libraries(${BINARY}_run PRIVATE ${BINARY})
