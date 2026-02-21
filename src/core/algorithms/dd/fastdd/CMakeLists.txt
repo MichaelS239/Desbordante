@@ -13,6 +13,7 @@ target_sources(
             util/evidence_inverter.cpp
             util/hybrid_evidence_inverter.cpp
             util/isn_info.cpp
+            util/min_max_dif_calculator.cpp
             util/single_isn_builder.cpp
     PUBLIC FILE_SET HEADERS BASE_DIRS "${PROJECT_SOURCE_DIR}/src"
 )
@@ -35,13 +36,4 @@ target_link_libraries(
             ${DESBORDANTE_PREFIX}::algos
             better-enums
             Boost::headers
-)
-
-set(NAME dd.fastdd_run)
-add_executable(${NAME})
-set_target_properties(${NAME} PROPERTIES LINK_LIBRARIES_ONLY_TARGETS ON)
-target_sources(${NAME} PRIVATE main.cpp)
-target_link_libraries(
-    ${NAME} PRIVATE ${DESBORDANTE_PREFIX}::dd::fastdd spdlog::spdlog_header_only
-                    better-enums Boost::headers
 )
