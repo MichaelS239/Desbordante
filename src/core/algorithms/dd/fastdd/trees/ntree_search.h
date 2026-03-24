@@ -29,10 +29,27 @@ private:
     // If present, it represents a complete bitset stored here.
     std::optional<util::DynamicBitset> stored_bitset_;
 
-    void InsertImpl(util::DynamicBitset const& bs, std::size_t next_bit) {
+    void InsertImpl(util::DynamicBitset const& bs, std::size_t cur_bit, std::size_t next_bit) {
         if (next_bit == util::DynamicBitset::npos) {
             stored_bitset_ = bs;
             return;
+        }
+
+        if (children_bitset_.none()) {
+            if (!stored_bitset_) {
+                stored_bitset_ = bs;
+                return;
+            } else {
+                std::size_t stored_next_bit = cur_bit == util::DynamicBitset::npos
+                                                      ? stored_bitset_->FindFirst()
+                                                      : stored_bitset_->FindNext(cur_bit);
+                if (stored_next_bit != util::DynamicBitset::npos) {
+                    children_[stored_next_bit] =
+                            std::make_unique<NTreeSearch>(stored_bitset_->size(), stored_bitset_);
+                    children_bitset_.set(stored_next_bit, true);
+                    stored_bitset_.reset();
+                }
+            }
         }
 
         auto& child = children_[next_bit];
@@ -41,13 +58,13 @@ private:
             children_bitset_.set(next_bit, true);
         }
 
-        child->InsertImpl(bs, bs.FindNext(next_bit));
+        child->InsertImpl(bs, next_bit, bs.FindNext(next_bit));
     }
 
     bool FindSubset(util::DynamicBitset const& bs, std::size_t next_bit) const {
         // If the current node stores a bitset, it is a subset by definition
         if (stored_bitset_) {
-            return true;
+            return stored_bitset_ == (bs & stored_bitset_.value());
         }
 
         while (next_bit != util::DynamicBitset::npos) {
@@ -66,8 +83,12 @@ private:
     bool GetAndRemoveGeneralizations(util::DynamicBitset const& bs, std::size_t next_bit,
                                      std::vector<util::DynamicBitset>& result) {
         if (stored_bitset_) {
-            result.push_back(stored_bitset_.value());
-            stored_bitset_.reset();
+            if (stored_bitset_ == (bs & stored_bitset_.value())) {
+                result.push_back(stored_bitset_.value());
+                stored_bitset_.reset();
+            } else {
+                return false;
+            }
         }
 
         while (next_bit != util::DynamicBitset::npos) {
@@ -173,7 +194,7 @@ public:
 
     void Insert(boost::dynamic_bitset<> const& bs) {
         util::DynamicBitset bitset(bs);
-        InsertImpl(bitset, bitset.FindFirst());
+        InsertImpl(bitset, util::DynamicBitset::npos, bitset.FindFirst());
     }
 
     [[nodiscard]]
