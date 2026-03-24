@@ -21,7 +21,7 @@ namespace algos::dd {
 class NTreeSearch {
 private:
     // Maps a bit-position to a child node
-    std::unordered_map<std::size_t, std::unique_ptr<NTreeSearch>> children_;
+    std::vector<std::unique_ptr<NTreeSearch>> children_;
     // Bitset that shows for each bit-position whether a child node is present in the map
     util::DynamicBitset children_bitset_;
 
@@ -70,7 +70,7 @@ private:
         while (next_bit != util::DynamicBitset::npos) {
             std::size_t next_index = bs.FindNext(next_bit);
             if (children_bitset_[next_bit]) {
-                if (children_.at(next_bit)->FindSubset(bs, next_index)) {
+                if (children_[next_bit]->FindSubset(bs, next_index)) {
                     return true;
                 }
             }
@@ -95,7 +95,7 @@ private:
             std::size_t next_index = bs.FindNext(next_bit);
             if (children_bitset_[next_bit]) {
                 if (children_[next_bit]->GetAndRemoveGeneralizations(bs, next_index, result)) {
-                    children_.erase(next_bit);
+                    children_[next_bit] = nullptr;
                     children_bitset_.set(next_bit, false);
                 }
             }
@@ -220,14 +220,10 @@ public:
     }
 
     explicit NTreeSearch(std::size_t bitset_size = 64UL)
-        : children_(), children_bitset_(bitset_size), stored_bitset_() {
-        children_.reserve(bitset_size);
-    }
+        : children_(bitset_size), children_bitset_(bitset_size), stored_bitset_() {}
 
     NTreeSearch(std::size_t bitset_size, std::optional<util::DynamicBitset> const& bs)
-        : children_(), children_bitset_(bitset_size), stored_bitset_(bs) {
-        children_.reserve(bitset_size);
-    }
+        : children_(bitset_size), children_bitset_(bitset_size), stored_bitset_(bs) {}
 };
 
 }  // namespace algos::dd
